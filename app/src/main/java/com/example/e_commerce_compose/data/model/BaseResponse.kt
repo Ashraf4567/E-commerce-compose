@@ -8,5 +8,9 @@ open class BaseResponse<T>(
     @SerializedName("message")
     val message: String? = null,
     @SerializedName("data")
-    val data: T? = null
+    val data: T? = null,
+    @SerializedName("metadata")
+    val metadata: Metadata? = null,
+    @field:SerializedName("results")
+    val results: Int? = null
 )

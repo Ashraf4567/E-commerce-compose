@@ -1,7 +1,10 @@
 package com.example.e_commerce_compose.presentation.screens.categories
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.e_commerce_compose.data.toDomain
+import com.example.e_commerce_compose.data.toDomainModel
 import com.example.e_commerce_compose.domain.repository.CategoriesRepository
 import com.example.e_commerce_compose.utils.Resource
 import kotlinx.coroutines.Dispatchers
@@ -22,8 +25,9 @@ class CategoriesViewModel(
         when(categoriesEvents){
             is CategoriesEvents.CategoryClicked -> {
                 state.update {
-                    it.copy(selectedCategoryId = categoriesEvents.id)
+                    it.copy(selectedCategory = categoriesEvents.category)
                 }
+                getSubCategory()
             }
             CategoriesEvents.GetCategories -> {
                 getCategories()
@@ -39,30 +43,31 @@ class CategoriesViewModel(
                         state.update {
                             it.copy(
                                 error = result.error.message,
-                                isLoading = false
+                                categoriesLoading = false
                             )
                         }
                     }
                     is Resource.Loading -> {
                         state.update {
-                            it.copy(isLoading = true)
+                            it.copy(categoriesLoading = true)
                         }
                     }
                     is Resource.Success -> {
                         state.update {
                             it.copy(
-                                categories = result.data,
-                                selectedCategoryId = result.data?.get(0)?.id,
-                                isLoading = false
+                                categories = result.data?.map { categoryDto-> categoryDto?.toDomainModel() },
+                                selectedCategory = result.data?.firstOrNull()?.toDomainModel(),
+                                categoriesLoading = false
                             )
                         }
+                        onEvent(CategoriesEvents.CategoryClicked(state.value.selectedCategory!!))
                     }
 
                     is Resource.ServerError -> {
                         state.update {
                             it.copy(
                                 error = result.error.message,
-                                isLoading = false
+                                categoriesLoading = false
                             )
                         }
                     }
@@ -71,7 +76,43 @@ class CategoriesViewModel(
         }
     }
 
-
+    private fun getSubCategory() {
+        viewModelScope.launch(Dispatchers.IO) {
+            categoriesRepository.getSubCategories(state.value.selectedCategory?.id?:"").collect{result ->
+                when(result){
+                    is Resource.Error -> {
+                        state.update {
+                            it.copy(
+                                error = result.error.message,
+                                subCategoriesLoading = false
+                            )
+                        }
+                    }
+                    Resource.Loading -> {
+                        state.update {
+                            it.copy(subCategoriesLoading = true)
+                        }
+                    }
+                    is Resource.ServerError -> {
+                        state.update {
+                            it.copy(
+                                error = result.error.message,
+                                subCategoriesLoading = false
+                            )
+                        }
+                    }
+                    is Resource.Success -> {
+                        state.update {
+                            it.copy(
+                                subCategories = result.data?.map { subCategoryDto-> subCategoryDto?.toDomain() },
+                                subCategoriesLoading = false
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 
 }
