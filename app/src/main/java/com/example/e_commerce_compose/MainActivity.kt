@@ -81,7 +81,7 @@ class MainActivity : ComponentActivity() {
                                             painter = painterResource(id = item.iconRes),
                                             contentDescription = "",
                                             tint = if (selectedItemIndex == index) PrimaryBlue else Color.White,
-                                            modifier = Modifier.size(40.dp)
+                                            modifier = Modifier.size(35.dp)
                                         )
                                     },
                                     modifier = Modifier.clip(CircleShape)

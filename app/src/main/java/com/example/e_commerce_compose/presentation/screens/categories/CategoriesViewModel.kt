@@ -56,7 +56,7 @@ class CategoriesViewModel(
                         state.update {
                             it.copy(
                                 categories = result.data?.map { categoryDto-> categoryDto?.toDomainModel() },
-                                selectedCategory = result.data?.firstOrNull()?.toDomainModel(),
+                                selectedCategory = result.data?.get(1)?.toDomainModel(),
                                 categoriesLoading = false
                             )
                         }
