@@ -1,4 +1,4 @@
-package com.example.e_commerce_compose.data.repositoryImpl
+package com.example.e_commerce_compose.data.model.categories
 
 import com.google.gson.annotations.SerializedName
 

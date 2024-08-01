@@ -15,6 +15,7 @@ import com.example.e_commerce_compose.presentation.screens.categories.Categories
 import com.example.e_commerce_compose.presentation.screens.home.HomeScreen
 import com.example.e_commerce_compose.presentation.screens.profile.ProfileScreen
 import com.example.e_commerce_compose.presentation.screens.wishlist.Wishlist
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SetupNavGraph(
@@ -35,7 +36,7 @@ fun SetupNavGraph(
         }
         composable(route = Screens.Categories.route){
 
-            val categoriesViewModel: CategoriesViewModel = hiltViewModel()
+            val categoriesViewModel: CategoriesViewModel = koinViewModel()
             val state = categoriesViewModel.state.collectAsState()
 
             CategoriesScreen(
