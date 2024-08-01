@@ -2,15 +2,11 @@ package com.example.e_commerce_compose.di
 
 import com.example.e_commerce_compose.data.repositoryImpl.CategoryRepositoryImpl
 import com.example.e_commerce_compose.domain.repository.CategoriesRepository
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
+import com.example.e_commerce_compose.presentation.screens.categories.CategoriesViewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
 
-@Module
-@InstallIn(ViewModelComponent::class)
-abstract class RepositoriesModule {
-
-    @Binds
-    abstract fun provideCategoriesRepo(categoriesRepo: CategoryRepositoryImpl): CategoriesRepository
+val repositoriesModule = module {
+    single<CategoriesRepository> { CategoryRepositoryImpl(get()) }
+    viewModel { CategoriesViewModel(get()) }
 }

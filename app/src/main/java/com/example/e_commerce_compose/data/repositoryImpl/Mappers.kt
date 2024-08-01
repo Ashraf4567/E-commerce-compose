@@ -1,5 +1,6 @@
 package com.example.e_commerce_compose.data.repositoryImpl
 
+import com.example.e_commerce_compose.data.model.categories.CategoryDto
 import com.example.e_commerce_compose.domain.model.Category
 
 fun CategoryDto.toDomainModel(): Category {

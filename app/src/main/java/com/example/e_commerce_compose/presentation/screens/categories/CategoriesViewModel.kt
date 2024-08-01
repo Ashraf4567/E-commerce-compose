@@ -4,15 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.e_commerce_compose.domain.repository.CategoriesRepository
 import com.example.e_commerce_compose.utils.Resource
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class CategoriesViewModel @Inject constructor(
+class CategoriesViewModel(
     private val categoriesRepository: CategoriesRepository
 ) : ViewModel() {
 
@@ -41,7 +38,7 @@ class CategoriesViewModel @Inject constructor(
                     is Resource.Error -> {
                         state.update {
                             it.copy(
-                                error = result.message,
+                                error = result.error.message,
                                 isLoading = false
                             )
                         }
@@ -56,6 +53,15 @@ class CategoriesViewModel @Inject constructor(
                             it.copy(
                                 categories = result.data,
                                 selectedCategoryId = result.data?.get(0)?.id,
+                                isLoading = false
+                            )
+                        }
+                    }
+
+                    is Resource.ServerError -> {
+                        state.update {
+                            it.copy(
+                                error = result.error.message,
                                 isLoading = false
                             )
                         }

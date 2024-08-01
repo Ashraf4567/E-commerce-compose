@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -59,7 +60,7 @@ fun CategoryItem(
             text = category.name?:"",
             modifier = Modifier.padding(start = 2.dp),
             color = PrimaryBlue,
-            fontSize = 16.sp,
+            fontSize = if(category.name?.length!! > 10) 12.sp else 14.sp,
             fontWeight = FontWeight.Bold
         )
     }

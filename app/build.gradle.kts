@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
 
     kotlin("kapt")
-    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -70,9 +69,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    //hilt
-    implementation("com.google.dagger:hilt-android:2.50")
-    kapt("com.google.dagger:hilt-android-compiler:2.50")
 
     //retrofit
     implementation ("com.google.code.gson:gson:2.11.0")
@@ -87,6 +83,11 @@ dependencies {
     //navigation
     implementation("androidx.navigation:navigation-compose:2.7.3")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+    //koin dependencies
+    implementation("io.insert-koin:koin-android:3.4.2")
+    implementation("io.insert-koin:koin-androidx-compose:3.4.2")
+    implementation("io.insert-koin:koin-androidx-navigation:3.4.2")
 
 
 }

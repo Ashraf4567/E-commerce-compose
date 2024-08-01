@@ -1,18 +1,15 @@
-package com.example.e_commerce_compose.data.repositoryImpl
+package com.example.e_commerce_compose.data.model.categories
 
+import com.example.e_commerce_compose.data.model.BaseResponse
 import com.google.gson.annotations.SerializedName
 
 data class CategoriesResponse(
 
 	@field:SerializedName("metadata")
 	val metadata: Metadata? = null,
-
-	@field:SerializedName("data")
-	val data: List<CategoryDto?>? = null,
-
 	@field:SerializedName("results")
 	val results: Int? = null
-)
+):BaseResponse<List<CategoryDto?>?>()
 
 data class Metadata(
 

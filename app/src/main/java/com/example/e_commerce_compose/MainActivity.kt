@@ -6,17 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.List
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -29,15 +21,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.e_commerce_compose.presentation.navigation.SetupNavGraph
 import com.example.e_commerce_compose.ui.theme.EcommerceComposeTheme
 import com.example.e_commerce_compose.ui.theme.PrimaryBlue
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +36,17 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             EcommerceComposeTheme {
                 var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
+//
+//                val currentBackStackEntry = navController.currentBackStackEntry
+//                val currentDestination = currentBackStackEntry?.destination
+
+                navController.addOnDestinationChangedListener { _, destination, _ ->
+                    selectedItemIndex = bottomNavigationItems.indexOfFirst {
+                        it.route == destination.route
+                    }.coerceAtLeast(0)
+
+                }
+
                 Scaffold(modifier = Modifier.fillMaxSize(),
                     bottomBar = {
                         NavigationBar(
@@ -64,21 +65,23 @@ class MainActivity : ComponentActivity() {
 
                                     colors = NavigationBarItemDefaults.colors(
                                         indicatorColor = Color.White,
-                                        selectedIconColor = PrimaryBlue,
-                                        unselectedIconColor = Color.White,
                                     ),
                                     selected =selectedItemIndex == index ,
                                     onClick = {
                                         selectedItemIndex = index
                                         navController.navigate(item.route) {
-                                            popUpTo(navController.graph.startDestinationId)
+                                            popUpTo(navController.graph.startDestinationId){
+                                                saveState = true
+                                            }
                                             launchSingleTop = true
                                         }
                                     },
                                     icon = {
                                         Icon(
-                                            imageVector = if (selectedItemIndex == index) item.selectedIcon else item.unselectedIcon,
-                                            contentDescription = ""
+                                            painter = painterResource(id = item.iconRes),
+                                            contentDescription = "",
+                                            tint = if (selectedItemIndex == index) PrimaryBlue else Color.White,
+                                            modifier = Modifier.size(40.dp)
                                         )
                                     },
                                     modifier = Modifier.clip(CircleShape)
@@ -101,36 +104,31 @@ class MainActivity : ComponentActivity() {
 val bottomNavigationItems = listOf(
     BottomNavigationItem(
         title = "Home",
-        selectedIcon = Icons.Filled.Home,
-        unselectedIcon = Icons.Outlined.Home,
+        iconRes = R.drawable.ic_home,
         route = "home"
     ),
     BottomNavigationItem(
         title = "Categories",
-        selectedIcon = Icons.Filled.List,
-        unselectedIcon = Icons.Outlined.List,
+        R.drawable.ic_category,
         route = "categories"
     ),
     //wishList
     BottomNavigationItem(
         title = "WishList",
-        selectedIcon = Icons.Filled.Favorite,
-        unselectedIcon = Icons.Outlined.Favorite,
+        iconRes = R.drawable.ic_wishlist_outlined,
         route = "wishList"
     ),
     //profile
     BottomNavigationItem(
         title = "Profile",
-        selectedIcon = Icons.Filled.Person,
-        unselectedIcon = Icons.Outlined.Person,
+        iconRes = R.drawable.ic_profile,
         route = "profile"
     )
 )
 
 data class BottomNavigationItem(
     val title: String,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector,
+    val iconRes: Int,
     val route: String,
 )
 
