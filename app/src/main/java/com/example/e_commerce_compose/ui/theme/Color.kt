@@ -6,6 +6,8 @@ val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
 val PrimaryBlue = Color(0xFF004182)
+val PrimaryText = Color(0xFF06004F)
+val Orange = Color(0xFFF4B400)
 
 val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)

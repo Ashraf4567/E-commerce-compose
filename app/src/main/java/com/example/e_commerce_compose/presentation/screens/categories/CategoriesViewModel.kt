@@ -1,10 +1,7 @@
 package com.example.e_commerce_compose.presentation.screens.categories
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.e_commerce_compose.data.toDomain
-import com.example.e_commerce_compose.data.toDomainModel
 import com.example.e_commerce_compose.domain.repository.CategoriesRepository
 import com.example.e_commerce_compose.utils.Resource
 import kotlinx.coroutines.Dispatchers
@@ -55,8 +52,8 @@ class CategoriesViewModel(
                     is Resource.Success -> {
                         state.update {
                             it.copy(
-                                categories = result.data?.map { categoryDto-> categoryDto?.toDomainModel() },
-                                selectedCategory = result.data?.get(1)?.toDomainModel(),
+                                categories = result.data,
+                                selectedCategory = result.data?.get(1),
                                 categoriesLoading = false
                             )
                         }
@@ -104,7 +101,7 @@ class CategoriesViewModel(
                     is Resource.Success -> {
                         state.update {
                             it.copy(
-                                subCategories = result.data?.map { subCategoryDto-> subCategoryDto?.toDomain() },
+                                subCategories = result.data,
                                 subCategoriesLoading = false
                             )
                         }

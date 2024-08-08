@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import com.example.e_commerce_compose.presentation.screens.categories.CategoriesScreen
 import com.example.e_commerce_compose.presentation.screens.categories.CategoriesViewModel
 import com.example.e_commerce_compose.presentation.screens.home.HomeScreen
+import com.example.e_commerce_compose.presentation.screens.home.HomeViewModel
 import com.example.e_commerce_compose.presentation.screens.profile.ProfileScreen
 import com.example.e_commerce_compose.presentation.screens.wishlist.Wishlist
 import org.koin.androidx.compose.koinViewModel
@@ -27,12 +28,16 @@ fun SetupNavGraph(
         startDestination = Screens.Home.route,
         modifier = Modifier
             .padding(
-                top = paddingValues.calculateTopPadding()+5.dp,
                 bottom = paddingValues.calculateBottomPadding()
             )
     ) {
         composable(route = Screens.Home.route){
-            HomeScreen()
+            val homeViewModel: HomeViewModel = koinViewModel()
+            val state = homeViewModel.state.collectAsState()
+            HomeScreen(
+                state = state.value,
+                onEvent = homeViewModel::onEvent
+            )
         }
         composable(route = Screens.Categories.route){
 

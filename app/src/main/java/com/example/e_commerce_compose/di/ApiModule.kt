@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val apiModule = module {
     single<HttpLoggingInterceptor> {
-        val loggingInterceptor = HttpLoggingInterceptor{message -> Log.d("Api", message)}
+        val loggingInterceptor = HttpLoggingInterceptor{message -> Log.d("Api Logging", message)}
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         loggingInterceptor
     }

@@ -3,8 +3,10 @@ package com.example.e_commerce_compose.data.network
 import com.example.e_commerce_compose.data.model.BaseResponse
 import com.example.e_commerce_compose.data.model.categories.CategoryDto
 import com.example.e_commerce_compose.data.model.categories.SubCategoryDto
+import com.example.e_commerce_compose.data.model.products.ProductDto
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface WebServices {
 
@@ -13,4 +15,10 @@ interface WebServices {
 
     @GET("api/v1/categories/{id}/subcategories")
     suspend fun getSubCategories(@Path("id")categoryId: String): BaseResponse<List<SubCategoryDto?>?>
+
+    @GET("api/v1/products")
+    suspend fun getProductsByCategory(
+        @Query("category") categoryId: String,
+        @Query("sort") sort: String = "price"
+    ): BaseResponse<List<ProductDto?>?>
 }
