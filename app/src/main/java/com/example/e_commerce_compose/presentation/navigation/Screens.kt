@@ -5,5 +5,8 @@ sealed class Screens(val route: String) {
     data object Categories: Screens("categories")
     data object WishList: Screens("wishList")
     data object Profile: Screens("profile")
+    data object ProductDetails: Screens("productDetails/{productId}"){
+        fun createRoute(productId: String) = "productDetails/$productId"
+    }
 
 }

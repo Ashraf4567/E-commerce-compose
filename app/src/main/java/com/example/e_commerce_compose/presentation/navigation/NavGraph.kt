@@ -4,16 +4,21 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.e_commerce_compose.presentation.screens.categories.CategoriesScreen
 import com.example.e_commerce_compose.presentation.screens.categories.CategoriesViewModel
 import com.example.e_commerce_compose.presentation.screens.home.HomeScreen
 import com.example.e_commerce_compose.presentation.screens.home.HomeViewModel
+import com.example.e_commerce_compose.presentation.screens.productDetails.ProductDetailsScreen
+import com.example.e_commerce_compose.presentation.screens.productDetails.ProductDetailsViewModel
 import com.example.e_commerce_compose.presentation.screens.profile.ProfileScreen
 import com.example.e_commerce_compose.presentation.screens.wishlist.Wishlist
 import org.koin.androidx.compose.koinViewModel
@@ -36,7 +41,11 @@ fun SetupNavGraph(
             val state = homeViewModel.state.collectAsState()
             HomeScreen(
                 state = state.value,
-                onEvent = homeViewModel::onEvent
+                onEvent = {
+                    homeViewModel.onEvent(it , onProductClicked = {productId ->
+                        navController.navigate(Screens.ProductDetails.createRoute(productId))
+                    })
+                }
             )
         }
         composable(route = Screens.Categories.route){
@@ -54,6 +63,24 @@ fun SetupNavGraph(
         }
         composable(route = Screens.Profile.route){
             ProfileScreen()
+        }
+
+        composable(
+            route = Screens.ProductDetails.route,
+            arguments = listOf(navArgument("productId"){
+                type = NavType.StringType
+                nullable = true
+            })
+        ){
+            val productDetailsViewModel: ProductDetailsViewModel = koinViewModel()
+            val state by productDetailsViewModel.state.collectAsState()
+            ProductDetailsScreen(
+                state = state,
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
+
         }
 
     }

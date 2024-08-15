@@ -85,7 +85,10 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(10.dp))
             ProductsHomeList(
                 modifier = Modifier,
-                products = state.productList
+                products = state.productList,
+                onProductClicked = {productId->
+                    onEvent(HomeEvents.OnProductClicked(productId))
+                }
             )
             Spacer(modifier = Modifier.height(10.dp))
             Image(

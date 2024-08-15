@@ -19,6 +19,10 @@ interface WebServices {
     @GET("api/v1/products")
     suspend fun getProductsByCategory(
         @Query("category") categoryId: String,
-        @Query("sort") sort: String = "price"
+        @Query("sort") sort: String = "price",
+        @Query("limit") limit: Int = 10
     ): BaseResponse<List<ProductDto?>?>
+
+    @GET("api/v1/products/{id}")
+    suspend fun getProductDetails(@Path("id") productId: String): BaseResponse<ProductDto?>
 }

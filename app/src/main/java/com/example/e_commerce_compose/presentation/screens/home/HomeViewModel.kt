@@ -20,10 +20,14 @@ class HomeViewModel(
     private val _state = MutableStateFlow(HomeUiState())
     val state = _state.asStateFlow()
 
-     fun onEvent(event: HomeEvents) {
+     fun onEvent(event: HomeEvents , onProductClicked : (productId : String) -> Unit) {
         when(event) {
             HomeEvents.LoadData -> {
                 handleLoadData()
+            }
+
+            is HomeEvents.OnProductClicked -> {
+                onProductClicked(event.productId)
             }
         }
     }

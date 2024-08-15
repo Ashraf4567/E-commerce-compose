@@ -48,7 +48,8 @@ import com.example.e_commerce_compose.ui.theme.PrimaryText
 @Composable
 fun HomeProductsItem(
     modifier: Modifier = Modifier,
-    product: Product
+    product: Product,
+    onClick: (productID: String) -> Unit
 ) {
 
     Box(
@@ -60,6 +61,7 @@ fun HomeProductsItem(
                 color = PrimaryBlue.copy(alpha = 0.3f),
                 shape = RoundedCornerShape(10.dp)
             )
+            .clickable { onClick(product.id ?:"") }
     ) {
         Column {
             AsyncImage(
