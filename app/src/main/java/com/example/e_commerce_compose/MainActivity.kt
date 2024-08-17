@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -23,7 +24,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.e_commerce_compose.presentation.components.BottomNavBar
+import com.example.e_commerce_compose.presentation.navigation.Screens
 import com.example.e_commerce_compose.presentation.navigation.SetupNavGraph
 import com.example.e_commerce_compose.ui.theme.EcommerceComposeTheme
 import com.example.e_commerce_compose.ui.theme.PrimaryBlue
@@ -37,8 +41,8 @@ class MainActivity : ComponentActivity() {
             EcommerceComposeTheme {
                 var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
 //
-//                val currentBackStackEntry = navController.currentBackStackEntry
-//                val currentDestination = currentBackStackEntry?.destination
+                val currentBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentDestination = currentBackStackEntry?.destination
 
                 navController.addOnDestinationChangedListener { _, destination, _ ->
                     selectedItemIndex = bottomNavigationItems.indexOfFirst {
@@ -47,48 +51,19 @@ class MainActivity : ComponentActivity() {
 
                 }
 
-                Scaffold(modifier = Modifier.fillMaxSize(),
+                Scaffold(modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White),
                     bottomBar = {
-                        NavigationBar(
-                            containerColor = PrimaryBlue,
-                            modifier = Modifier
-                                .height(60.dp)
-                                .clip(
-                                    RoundedCornerShape(
-                                        topStart = 15.dp,
-                                        topEnd = 15.dp
-                                    )
-                                ),
-                        ) {
-                            bottomNavigationItems.forEachIndexed { index, item ->
-                                NavigationBarItem(
-
-                                    colors = NavigationBarItemDefaults.colors(
-                                        indicatorColor = Color.White,
-                                    ),
-                                    selected =selectedItemIndex == index ,
-                                    onClick = {
-                                        selectedItemIndex = index
-                                        navController.navigate(item.route) {
-                                            popUpTo(navController.graph.startDestinationId){
-                                                saveState = true
-                                            }
-                                            launchSingleTop = true
-                                        }
-                                    },
-                                    icon = {
-                                        Icon(
-                                            painter = painterResource(id = item.iconRes),
-                                            contentDescription = "",
-                                            tint = if (selectedItemIndex == index) PrimaryBlue else Color.White,
-                                            modifier = Modifier.size(35.dp)
-                                        )
-                                    },
-                                    modifier = Modifier.clip(CircleShape)
-
-                                )
-                            }
+                        if (currentDestination?.route != Screens.ProductDetails.route){
+                            BottomNavBar(
+                                navController = navController,
+                                onSelectedItem = {
+                                    selectedItemIndex = it
+                                }
+                            )
                         }
+
                     }
                 ) { innerPadding ->
                     SetupNavGraph(

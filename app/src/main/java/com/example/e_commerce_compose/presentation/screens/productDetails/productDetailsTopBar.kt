@@ -10,6 +10,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,15 +21,21 @@ import com.example.e_commerce_compose.R
 import com.example.e_commerce_compose.ui.theme.EcommerceComposeTheme
 import com.example.e_commerce_compose.ui.theme.PrimaryBlue
 import com.example.e_commerce_compose.ui.theme.PrimaryText
+import com.example.e_commerce_compose.ui.theme.poppins
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailsTopBar(
     onBackClicked: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
 ) {
 
     CenterAlignedTopAppBar(
-        title = { Text(text = "Product Details" , color = PrimaryText)},
+        title = { Text(
+            text = "Product Details",
+            color = PrimaryText,
+            fontFamily = poppins,
+        )},
         navigationIcon = {
             IconButton(onClick = onBackClicked) {
                 Image(
@@ -54,7 +62,12 @@ fun ProductDetailsTopBar(
              }
 
          },
-        modifier = Modifier
-            .background(Color.White)
+        scrollBehavior = scrollBehavior,
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.White,
+            titleContentColor = PrimaryText,
+            navigationIconContentColor = PrimaryBlue,
+            actionIconContentColor = PrimaryBlue
+        )
     )
 }
