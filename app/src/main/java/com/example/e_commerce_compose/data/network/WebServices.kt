@@ -4,7 +4,11 @@ import com.example.e_commerce_compose.data.model.BaseResponse
 import com.example.e_commerce_compose.data.model.categories.CategoryDto
 import com.example.e_commerce_compose.data.model.categories.SubCategoryDto
 import com.example.e_commerce_compose.data.model.products.ProductDto
+import com.example.e_commerce_compose.domain.model.SignInRequest
+import com.example.e_commerce_compose.domain.model.SignInResponse
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -25,4 +29,10 @@ interface WebServices {
 
     @GET("api/v1/products/{id}")
     suspend fun getProductDetails(@Path("id") productId: String): BaseResponse<ProductDto?>
+
+    @POST("api/v1/auth/signin")
+    suspend fun signIn(
+        @Body
+        signInRequest: SignInRequest
+    ): SignInResponse
 }

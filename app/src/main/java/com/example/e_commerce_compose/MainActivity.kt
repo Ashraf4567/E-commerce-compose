@@ -43,6 +43,7 @@ class MainActivity : ComponentActivity() {
 //
                 val currentBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = currentBackStackEntry?.destination
+                val screenToHideBottomBar = listOf(Screens.ProductDetails.route , Screens.SignIn.route)
 
                 navController.addOnDestinationChangedListener { _, destination, _ ->
                     selectedItemIndex = bottomNavigationItems.indexOfFirst {
@@ -55,7 +56,7 @@ class MainActivity : ComponentActivity() {
                     .fillMaxSize()
                     .background(Color.White),
                     bottomBar = {
-                        if (currentDestination?.route != Screens.ProductDetails.route){
+                        if (currentDestination?.route !in screenToHideBottomBar){
                             BottomNavBar(
                                 navController = navController,
                                 onSelectedItem = {

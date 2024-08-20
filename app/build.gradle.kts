@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    //kotlin serialization plugin
+    alias(libs.plugins.kotlinSerialization)
 
     kotlin("kapt")
 }
@@ -88,6 +90,14 @@ dependencies {
     implementation("io.insert-koin:koin-android:3.4.2")
     implementation("io.insert-koin:koin-androidx-compose:3.4.2")
     implementation("io.insert-koin:koin-androidx-navigation:3.4.2")
+
+    //lottie
+    implementation("com.airbnb.android:lottie-compose:6.0.0")
+
+    //data store
+    implementation("androidx.datastore:datastore:1.1.1")
+    implementation(libs.kotlinx.serialization.json)
+
 
 
 }

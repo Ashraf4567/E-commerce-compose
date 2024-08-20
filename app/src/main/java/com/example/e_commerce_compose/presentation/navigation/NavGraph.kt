@@ -1,15 +1,11 @@
 package com.example.e_commerce_compose.presentation.navigation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -19,6 +15,8 @@ import com.example.e_commerce_compose.presentation.screens.categories.Categories
 import com.example.e_commerce_compose.presentation.screens.categories.CategoriesViewModel
 import com.example.e_commerce_compose.presentation.screens.home.HomeScreen
 import com.example.e_commerce_compose.presentation.screens.home.HomeViewModel
+import com.example.e_commerce_compose.presentation.screens.login.SignInScreen
+import com.example.e_commerce_compose.presentation.screens.login.SignInViewModel
 import com.example.e_commerce_compose.presentation.screens.productDetails.ProductDetailsScreen
 import com.example.e_commerce_compose.presentation.screens.productDetails.ProductDetailsViewModel
 import com.example.e_commerce_compose.presentation.screens.profile.ProfileScreen
@@ -32,7 +30,7 @@ fun SetupNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screens.Home.route,
+        startDestination = Screens.SignIn.route,
         modifier = Modifier
             .padding(
                 bottom = paddingValues.calculateBottomPadding()
@@ -83,6 +81,19 @@ fun SetupNavGraph(
                 }
             )
 
+        }
+        composable(route = Screens.SignIn.route){
+            val signInViewModel: SignInViewModel = koinViewModel()
+            SignInScreen(
+                viewModel = signInViewModel,
+                onNavigateToHome = {
+                    navController.navigate(Screens.Home.route){
+                        popUpTo(Screens.SignIn.route){
+                            inclusive = true
+                        }
+                    }
+                }
+            )
         }
 
     }
