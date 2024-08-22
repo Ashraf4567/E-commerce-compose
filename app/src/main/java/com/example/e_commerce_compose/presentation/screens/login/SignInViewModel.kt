@@ -2,6 +2,7 @@ package com.example.e_commerce_compose.presentation.screens.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.e_commerce_compose.data.local.DataStoreManager
 import com.example.e_commerce_compose.data.model.UserCredentials
 import com.example.e_commerce_compose.domain.model.SignInRequest
 import com.example.e_commerce_compose.domain.repository.AuthRepository
@@ -16,7 +17,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SignInViewModel(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val dataStoreManager: DataStoreManager
 ): ViewModel() {
 
     private val _state = MutableStateFlow(SignInState())
@@ -63,9 +65,11 @@ class SignInViewModel(
                     is Resource.Error -> {
                         _state.update {
                             it.copy(
-                                error = result.error.message
+                                error = result.error.message,
+                                isLoading = false
                             )
                         }
+                        _effect.emit(SignInEffects.ShowToastMessage(result.error.message.toString()))
                     }
                     Resource.Loading -> {
                         _state.update {
@@ -83,7 +87,7 @@ class SignInViewModel(
                             )
                         }
                         result.let {myResult ->
-                            authRepository.saveUserToDataStore(
+                            dataStoreManager.saveUserToDataStore(
                                 UserCredentials(
                                     email = myResult.data?.user?.email!!,
                                     name = myResult.data.user.name!!,
@@ -100,7 +104,7 @@ class SignInViewModel(
 
     private fun validateSignIn(): Boolean{
         var isValid = true
-        if(state.value.email.isBlank()) {
+        if(_state.value.email.isBlank()) {
             isValid = false
             _state.update {
                 it.copy(
@@ -108,7 +112,16 @@ class SignInViewModel(
                 )
             }
         }
-        if(state.value.password.isBlank()) {
+        // handle email format validation
+        if (!_state.value.email.contains("@") && !_state.value.email.contains(".")){
+            isValid = false
+            _state.update {
+                it.copy(
+                    emailError = "Invalid email format"
+                )
+            }
+        }
+        if(_state.value.password.isBlank()) {
             isValid = false
             _state.update {
                 it.copy(

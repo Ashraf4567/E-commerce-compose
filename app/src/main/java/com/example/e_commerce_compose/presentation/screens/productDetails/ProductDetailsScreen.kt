@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 fun ProductDetailsScreen(
     state: ProductDetailsState,
     onBackClick: () -> Unit,
+    onEvent: (ProductsDetailsEvents) -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -54,8 +55,9 @@ fun ProductDetailsScreen(
             }
             else if (state.product != null){
                 ProductDetailsContent(
-                    product = state.product,
-                    scrollBehavior = scrollBehavior
+                    state = state,
+                    scrollBehavior = scrollBehavior,
+                    onEvent = onEvent
                 )
             }
 

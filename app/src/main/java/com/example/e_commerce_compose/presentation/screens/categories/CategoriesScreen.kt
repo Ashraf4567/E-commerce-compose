@@ -21,7 +21,11 @@ fun CategoriesScreen(
 ) {
     Scaffold(
         topBar = {
-            MyTopAppBar(modifier = Modifier.padding(top = 25.dp), onQueryChange = {})
+            MyTopAppBar(
+                modifier = Modifier.padding(top = 25.dp),
+                showGreeting = false,
+                onQueryChange = {}
+            )
         }
     ) {
         if (state.categoriesLoading) {

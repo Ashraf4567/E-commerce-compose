@@ -1,6 +1,7 @@
 package com.example.e_commerce_compose.di
 
 import android.util.Log
+import com.example.e_commerce_compose.data.network.TokenInterceptor
 import com.example.e_commerce_compose.data.network.WebServices
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -14,12 +15,15 @@ val apiModule = module {
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         loggingInterceptor
     }
+    factory {TokenInterceptor(get())}
 
     single<OkHttpClient> {
         OkHttpClient.Builder()
             .addInterceptor(get<HttpLoggingInterceptor>())
+            .addInterceptor(get<TokenInterceptor>())
             .build()
     }
+
 
     single<GsonConverterFactory> {
         GsonConverterFactory.create()

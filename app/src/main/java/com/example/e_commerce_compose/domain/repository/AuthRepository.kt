@@ -10,7 +10,4 @@ interface AuthRepository {
 
     suspend fun signIn(signInRequest: SignInRequest): Flow<Resource<SignInResponse>>
 
-    suspend fun saveUserToDataStore(userCredentials: UserCredentials)
-
-    suspend fun getUserFromDataStore(): Flow<UserCredentials>
 }

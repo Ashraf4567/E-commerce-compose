@@ -1,7 +1,10 @@
 package com.example.e_commerce_compose.presentation.screens.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.e_commerce_compose.data.local.DataStoreManager
+import com.example.e_commerce_compose.domain.repository.AuthRepository
 import com.example.e_commerce_compose.domain.repository.CategoriesRepository
 import com.example.e_commerce_compose.domain.repository.ProductsRepository
 import com.example.e_commerce_compose.utils.Resource
@@ -15,7 +18,8 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val categoriesRepository: CategoriesRepository,
-    private val productsRepository: ProductsRepository
+    private val productsRepository: ProductsRepository,
+    private val dataStoreManager: DataStoreManager
 ): ViewModel() {
     private val _state = MutableStateFlow(HomeUiState())
     val state = _state.asStateFlow()
@@ -36,7 +40,14 @@ class HomeViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             val categoriesDeferred = async { loadCategories() }
             val productsDeferred = async { loadProducts() }
-
+            dataStoreManager.getUserFromDataStore().collect{user ->
+                _state.update {
+                    it.copy(
+                        currentUserName = user.name
+                    )
+                }
+                Log.d("HomeViewModel", "handleLoadData: $user")
+            }
             try {
                 awaitAll(categoriesDeferred, productsDeferred)
             } catch (e: Exception) {
@@ -66,8 +77,7 @@ class HomeViewModel(
                     is Resource.Success -> {
                         _state.update {
                             it.copy(
-                                categoriesList = result.data,
-                                isLoading = false
+                                categoriesList = result.data
                             )
                         }
                     }
@@ -82,12 +92,19 @@ class HomeViewModel(
                 .collect{result ->
                     when(result){
                         is Resource.Error -> {}
-                        is Resource.Loading -> {}
+                        is Resource.Loading -> {
+                            _state.update {
+                                it.copy(
+                                    isLoading = true
+                                )
+                            }
+                        }
                         is Resource.ServerError -> {}
                         is Resource.Success -> {
                             _state.update {
                                 it.copy(
                                     productList = result.data?.filterNotNull(),
+                                    isLoading = false
                                 )
                             }
                         }

@@ -21,6 +21,7 @@ import com.example.e_commerce_compose.presentation.screens.productDetails.Produc
 import com.example.e_commerce_compose.presentation.screens.productDetails.ProductDetailsViewModel
 import com.example.e_commerce_compose.presentation.screens.profile.ProfileScreen
 import com.example.e_commerce_compose.presentation.screens.wishlist.Wishlist
+import com.example.e_commerce_compose.presentation.screens.wishlist.WishlistViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -59,7 +60,11 @@ fun SetupNavGraph(
             )
         }
         composable(route = Screens.WishList.route){
-            Wishlist()
+            val wishlistViewModel: WishlistViewModel = koinViewModel()
+            val state = wishlistViewModel.state.collectAsState()
+            Wishlist(
+                wishlistState = state.value
+            )
         }
         composable(route = Screens.Profile.route){
             ProfileScreen()
@@ -78,7 +83,8 @@ fun SetupNavGraph(
                 state = state,
                 onBackClick = {
                     navController.popBackStack()
-                }
+                },
+                onEvent = productDetailsViewModel::onEvent
             )
 
         }

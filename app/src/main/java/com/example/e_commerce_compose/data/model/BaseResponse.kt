@@ -11,6 +11,6 @@ open class BaseResponse<T>(
     val data: T? = null,
     @SerializedName("metadata")
     val metadata: Metadata? = null,
-    @field:SerializedName("results")
-    val results: Int? = null
+    @field:SerializedName("status")
+    val status: String? = null
 )

@@ -52,6 +52,8 @@ fun HomeProductsItem(
     onClick: (productID: String) -> Unit
 ) {
 
+    val favoriteIcon = if (product.isFavorite) painterResource(id = R.drawable.ic_wishlist_filled)else painterResource(id = R.drawable.ic_add_to_wishlis)
+
     Box(
         modifier = modifier
             .width(160.dp)
@@ -61,7 +63,7 @@ fun HomeProductsItem(
                 color = PrimaryBlue.copy(alpha = 0.3f),
                 shape = RoundedCornerShape(10.dp)
             )
-            .clickable { onClick(product.id ?:"") }
+            .clickable { onClick(product.id ?: "") }
     ) {
         Column {
             AsyncImage(
@@ -121,12 +123,15 @@ fun HomeProductsItem(
                 .clip(CircleShape)
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
-                    indication = rememberRipple(color = PrimaryBlue.copy(alpha = 0.3f) , bounded = true)
+                    indication = rememberRipple(
+                        color = PrimaryBlue.copy(alpha = 0.3f),
+                        bounded = true
+                    )
                 ) { }
         )
 
         Image(
-            painter = painterResource(id = R.drawable.ic_add_to_wishlis),
+            painter = favoriteIcon,
             contentDescription = "add",
             modifier = Modifier
                 .align(Alignment.TopEnd)
@@ -135,7 +140,10 @@ fun HomeProductsItem(
                 .clip(CircleShape)
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
-                    indication = rememberRipple(color = PrimaryBlue.copy(alpha = 0.3f) , bounded = true)
+                    indication = rememberRipple(
+                        color = PrimaryBlue.copy(alpha = 0.3f),
+                        bounded = true
+                    )
                 ) { }
         )
 

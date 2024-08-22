@@ -1,5 +1,6 @@
 package com.example.e_commerce_compose.presentation.screens.login
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,6 +33,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -49,150 +51,130 @@ fun SignInScreen(
 
     val isKeyboardOpen by keyboardAsState()
     val state by viewModel.state.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(key1 = Unit) {
         viewModel.effect.collect {effect ->
             when (effect) {
-                SignInEffects.NavigateToHome -> onNavigateToHome()
+                is SignInEffects.NavigateToHome -> onNavigateToHome()
+                is SignInEffects.ShowToastMessage -> {
+                    Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
 
-    if (state.isLoading){
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
-        }
-    }
-    if (state.error != null) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = state.error!!,
-                color = MaterialTheme.colorScheme.error
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(20.dp)
+            .padding(top = 20.dp)
+        ,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        AnimatedVisibility(visible = !isKeyboardOpen) {
+            SignInBackground(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = {
-
-            }) {
-                Text(text = "Try Again")
-            }
         }
-    }
-    if (state.error == null && !state.isLoading){
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(20.dp)
-                .padding(top = 30.dp)
-            ,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            AnimatedVisibility(visible = !isKeyboardOpen) {
-                SignInBackground(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(300.dp)
-                )
-            }
 
+        Text(
+            text = "Sign In",
+            style = MaterialTheme.typography.headlineLarge,
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            text = "Hi! Welcome Back, you've been missed",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+        LabeledOutlinedTextFiled(
+            modifier = Modifier.fillMaxWidth(),
+            value = state.email,
+            label = "Email",
+            placeholder = "exampl@gmail.com",
+            keyboardType = KeyboardType.Email,
+            icon = Icons.Default.Email,
+            isError = state.emailError.isNotBlank(),
+            errorMessage = state.emailError
+        ) {
+            viewModel.onEvent(SignInEvents.SetEmail(it))
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+        LabeledOutlinedTextFiled(
+            modifier = Modifier.fillMaxWidth(),
+            value = state.password,
+            label = "Password",
+            placeholder = "********",
+            keyboardType = KeyboardType.Password,
+            icon = Icons.Default.Lock,
+            isError = state.passwordError.isNotBlank(),
+            errorMessage = state.passwordError,
+            imeAction = ImeAction.Done
+        ) {
+            viewModel.onEvent(SignInEvents.SetPassword(it))
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            text = "Forgot Password?",
+            style = MaterialTheme.typography.bodyMedium,
+            color = PrimaryBlue,
+            textDecoration = TextDecoration.Underline,
+            modifier = Modifier
+                .align(Alignment.End)
+                .clickable {
+                    viewModel.onEvent(SignInEvents.ForgotPassword(state.email))
+                }
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Button(
+            onClick = {
+                viewModel.onEvent(SignInEvents.SignIn)
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = PrimaryBlue,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ),
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Text(
                 text = "Sign In",
-                style = MaterialTheme.typography.headlineLarge,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(vertical = 4.dp)
             )
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                text = "Hi! Welcome Back, you've been missed",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-            LabeledOutlinedTextFiled(
-                modifier = Modifier.fillMaxWidth(),
-                value = state.email,
-                label = "Email",
-                placeholder = "exampl@gmail.com",
-                keyboardType = KeyboardType.Email,
-                icon = Icons.Default.Email,
-                isError = state.emailError.isNotBlank(),
-                errorMessage = state.emailError
-            ) {
-                viewModel.onEvent(SignInEvents.SetEmail(it))
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-            LabeledOutlinedTextFiled(
-                modifier = Modifier.fillMaxWidth(),
-                value = state.password,
-                label = "Password",
-                placeholder = "********",
-                keyboardType = KeyboardType.Password,
-                icon = Icons.Default.Lock,
-                isError = state.passwordError.isNotBlank(),
-                errorMessage = state.passwordError,
-                imeAction = ImeAction.Done
-            ) {
-                viewModel.onEvent(SignInEvents.SetPassword(it))
-            }
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                text = "Forgot Password?",
-                style = MaterialTheme.typography.bodyMedium,
-                color = PrimaryBlue,
-                textDecoration = TextDecoration.Underline,
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .clickable {
-                        viewModel.onEvent(SignInEvents.ForgotPassword(state.email))
-                    }
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Button(
-                onClick = {
-                    viewModel.onEvent(SignInEvents.SignIn)
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = PrimaryBlue,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                ),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "Sign In",
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(vertical = 4.dp)
+            AnimatedVisibility(visible = state.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.padding(start = 4.dp),
+                    color = Color.White,
+                    strokeWidth = 2.dp
                 )
             }
-            Spacer(modifier = Modifier.height(20.dp))
-            Row {
-                Text(
-                    text = "Don't have an account?",
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Text(
-                    text = "Sign Up",
-                    color = PrimaryBlue,
-                    style = MaterialTheme.typography.titleMedium,
-                    textDecoration = TextDecoration.Underline,
-                    modifier = Modifier.clickable {
-                        viewModel.onEvent(SignInEvents.SignUp)
-                    }
-                )
-            }
-
         }
+        Spacer(modifier = Modifier.height(20.dp))
+        Row {
+            Text(
+                text = "Don't have an account?",
+                style = MaterialTheme.typography.titleMedium
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+            Text(
+                text = "Sign Up",
+                color = PrimaryBlue,
+                style = MaterialTheme.typography.titleMedium,
+                textDecoration = TextDecoration.Underline,
+                modifier = Modifier.clickable {
+                    viewModel.onEvent(SignInEvents.SignUp)
+                }
+            )
+        }
+
     }
 
 

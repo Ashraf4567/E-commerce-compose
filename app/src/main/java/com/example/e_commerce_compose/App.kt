@@ -2,6 +2,7 @@ package com.example.e_commerce_compose
 
 import android.app.Application
 import com.example.e_commerce_compose.di.apiModule
+import com.example.e_commerce_compose.di.localDBModule
 import com.example.e_commerce_compose.di.repositoriesModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -14,7 +15,7 @@ class App: Application(){
             androidContext(this@App)
             androidLogger()
             modules(
-                listOf(apiModule , repositoriesModule)
+                listOf(apiModule , repositoriesModule , localDBModule)
             )
         }
     }

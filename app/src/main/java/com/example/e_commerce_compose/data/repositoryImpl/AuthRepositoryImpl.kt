@@ -15,8 +15,7 @@ import kotlinx.coroutines.flow.flow
 val Context.dataStore by dataStore("user_data.json" , UserSerializer)
 
 class AuthRepositoryImpl(
-    private val webServices: WebServices,
-    private val androidContext: Context
+    private val webServices: WebServices
 ): AuthRepository {
     override suspend fun signIn(signInRequest: SignInRequest): Flow<Resource<SignInResponse>> = flow {
         emit(Resource.Loading)
@@ -29,17 +28,6 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun saveUserToDataStore(userCredentials: UserCredentials) {
-        androidContext.dataStore.updateData {
-            userCredentials
-        }
-    }
-
-    override suspend fun getUserFromDataStore(): Flow<UserCredentials> = flow {
-        androidContext.dataStore.data.collect{
-            emit(it)
-        }
-    }
 }
 
 //make user ser

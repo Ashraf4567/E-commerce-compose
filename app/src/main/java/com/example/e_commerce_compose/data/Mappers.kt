@@ -56,7 +56,9 @@ fun ProductDto.toDomain(): Product{
         subcategory = subcategory?.map { it?.toDomain() },
         category = category?.toDomainModel(),
         brand = brand?.toDomain(),
-        slug = slug
+        slug = slug,
+        isFavorite = false,
+        isInCart = false,
     )
 }
 

@@ -4,10 +4,13 @@ import com.example.e_commerce_compose.data.model.BaseResponse
 import com.example.e_commerce_compose.data.model.categories.CategoryDto
 import com.example.e_commerce_compose.data.model.categories.SubCategoryDto
 import com.example.e_commerce_compose.data.model.products.ProductDto
+import com.example.e_commerce_compose.domain.model.AddToWishlistRequest
 import com.example.e_commerce_compose.domain.model.SignInRequest
 import com.example.e_commerce_compose.domain.model.SignInResponse
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -35,4 +38,16 @@ interface WebServices {
         @Body
         signInRequest: SignInRequest
     ): SignInResponse
+
+    @POST("api/v1/wishlist")
+    suspend fun addProductToWishList(
+        @Body
+        addWishListRequest: AddToWishlistRequest
+    ): BaseResponse<List<String?>?>
+
+    @GET("api/v1/wishlist")
+    suspend fun getWishlist(): BaseResponse<List<ProductDto?>?>
+
+    @DELETE("api/v1/wishlist/{id}")
+    suspend fun removeProductFromWishlist(@Path("id") productId: String): BaseResponse<List<String?>?>
 }

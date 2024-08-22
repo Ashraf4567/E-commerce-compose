@@ -40,6 +40,8 @@ import com.example.e_commerce_compose.ui.theme.PrimaryBlue
 @Composable
 fun MyTopAppBar(
     modifier: Modifier,
+    currentUserName: String = "",
+    showGreeting: Boolean = true,
     onQueryChange: (String) -> Unit
 ) {
     Column(
@@ -47,16 +49,19 @@ fun MyTopAppBar(
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
     ) {
-        Text(
-            text = "Welcome back, Ahmed",
-            style = TextStyle(
-                fontSize = 18.sp,
-                color = Color.Black,
-                fontFamily = Font(R.font.greating_font).toFontFamily()
+        if (showGreeting) {
+            Text(
+                text = "Welcome back, $currentUserName",
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    color = Color.Black,
+                    fontFamily = Font(R.font.greating_font).toFontFamily()
+                )
             )
-        )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
-        Spacer(modifier = Modifier.height(8.dp))
+
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {

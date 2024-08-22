@@ -3,8 +3,8 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     //kotlin serialization plugin
     alias(libs.plugins.kotlinSerialization)
+    id("com.google.devtools.ksp")
 
-    kotlin("kapt")
 }
 
 android {
@@ -98,10 +98,12 @@ dependencies {
     implementation("androidx.datastore:datastore:1.1.1")
     implementation(libs.kotlinx.serialization.json)
 
+    //Room Database
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
 
 
-}
-// Allow references to generated code
-kapt {
-    correctErrorTypes = true
+
 }
