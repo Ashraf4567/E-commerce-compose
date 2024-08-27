@@ -1,17 +1,21 @@
 package com.example.e_commerce_compose.data.network
 
 import com.example.e_commerce_compose.data.model.BaseResponse
+import com.example.e_commerce_compose.data.model.cart.CartResponse
+import com.example.e_commerce_compose.data.model.cart.UpdateQuantityRequest
 import com.example.e_commerce_compose.data.model.categories.CategoryDto
 import com.example.e_commerce_compose.data.model.categories.SubCategoryDto
 import com.example.e_commerce_compose.data.model.products.ProductDto
+import com.example.e_commerce_compose.domain.model.AddToCartRequest
+import com.example.e_commerce_compose.domain.model.CartOperationResponse
 import com.example.e_commerce_compose.domain.model.AddToWishlistRequest
 import com.example.e_commerce_compose.domain.model.SignInRequest
 import com.example.e_commerce_compose.domain.model.SignInResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -50,4 +54,22 @@ interface WebServices {
 
     @DELETE("api/v1/wishlist/{id}")
     suspend fun removeProductFromWishlist(@Path("id") productId: String): BaseResponse<List<String?>?>
+
+    @POST("api/v1/cart")
+    suspend fun addProductToCart(
+        @Body
+        addToCartRequest: AddToCartRequest
+    ): BaseResponse<CartOperationResponse>
+
+    @DELETE("api/v1/cart/{id}")
+    suspend fun removeProductFromCart(@Path("id") productId: String): CartResponse
+
+    @GET("api/v1/cart")
+    suspend fun getCart(): CartResponse
+
+    @PUT("api/v1/cart/{id}")
+    suspend fun updateProductCountInCart(
+        @Path("id") productId: String,
+        @Body updateQuantityRequest: UpdateQuantityRequest
+    ): CartResponse
 }

@@ -1,5 +1,6 @@
 package com.example.e_commerce_compose.presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -9,7 +10,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.ShoppingCart
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,7 +29,11 @@ import com.example.e_commerce_compose.ui.theme.PrimaryBlue
 import com.example.e_commerce_compose.ui.theme.poppins
 
 @Composable
-fun AddToCartButton(modifier: Modifier = Modifier) {
+fun AddToCartButton(
+    modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
+    isInCart: Boolean = false
+) {
     Row(
         modifier = modifier
             .width(250.dp)
@@ -37,13 +44,22 @@ fun AddToCartButton(modifier: Modifier = Modifier) {
         ,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            imageVector = Icons.Outlined.ShoppingCart,
-            contentDescription = "cart icon",
-            tint = Color.White,
-            modifier = Modifier
-                .size(25.dp)
-        )
+        if (!isInCart) {
+            Icon(
+                imageVector = Icons.Outlined.ShoppingCart,
+                contentDescription = "cart icon",
+                tint = Color.White,
+                modifier = Modifier
+                    .size(25.dp)
+            )
+        }else {
+            Icon(
+                imageVector = Icons.Outlined.Check,
+                contentDescription = "cart icon",
+                tint = Color.White,
+                modifier = Modifier.size(25.dp)
+            )
+        }
         Text(
             text = "Add to cart",
             textAlign = TextAlign.Center,
@@ -52,6 +68,12 @@ fun AddToCartButton(modifier: Modifier = Modifier) {
             fontFamily = poppins,
             fontSize = 20.sp
         )
+        AnimatedVisibility(visible = isLoading) {
+            CircularProgressIndicator(
+                color = Color.White,
+                modifier = Modifier.size(25.dp)
+            )
+        }
     }
 }
 

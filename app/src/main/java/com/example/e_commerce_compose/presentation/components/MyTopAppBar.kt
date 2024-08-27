@@ -42,6 +42,7 @@ fun MyTopAppBar(
     modifier: Modifier,
     currentUserName: String = "",
     showGreeting: Boolean = true,
+    onNavigateToCart: () -> Unit = {},
     onQueryChange: (String) -> Unit
 ) {
     Column(
@@ -79,6 +80,9 @@ fun MyTopAppBar(
                 modifier = Modifier
                     .weight(.1f)
                     .size(40.dp)
+                    .clickable {
+                        onNavigateToCart()
+                    }
             )
         }
     }

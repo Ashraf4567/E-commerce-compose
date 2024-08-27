@@ -1,6 +1,5 @@
 package com.example.e_commerce_compose.presentation.screens.home
 
-import com.example.e_commerce_compose.data.model.UserCredentials
 import com.example.e_commerce_compose.domain.model.Category
 import com.example.e_commerce_compose.domain.model.Product
 

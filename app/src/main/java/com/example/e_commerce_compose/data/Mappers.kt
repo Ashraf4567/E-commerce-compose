@@ -1,5 +1,6 @@
 package com.example.e_commerce_compose.data
 
+import com.example.e_commerce_compose.data.model.cart.ProductsItem
 import com.example.e_commerce_compose.data.model.categories.CategoryDto
 import com.example.e_commerce_compose.data.model.categories.SubCategoryDto
 import com.example.e_commerce_compose.data.model.products.BrandDto
@@ -40,7 +41,7 @@ fun BrandDto.toDomain(): Brand{
     )
 }
 
-fun ProductDto.toDomain(): Product{
+fun ProductDto.toDomain(): Product {
     return Product(
         sold = sold,
         images = images,

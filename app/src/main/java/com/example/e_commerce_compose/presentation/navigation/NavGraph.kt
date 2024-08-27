@@ -1,7 +1,10 @@
 package com.example.e_commerce_compose.presentation.navigation
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -11,6 +14,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.e_commerce_compose.presentation.screens.cart.CartScreen
+import com.example.e_commerce_compose.presentation.screens.cart.CartViewModel
 import com.example.e_commerce_compose.presentation.screens.categories.CategoriesScreen
 import com.example.e_commerce_compose.presentation.screens.categories.CategoriesViewModel
 import com.example.e_commerce_compose.presentation.screens.home.HomeScreen
@@ -39,13 +44,15 @@ fun SetupNavGraph(
     ) {
         composable(route = Screens.Home.route){
             val homeViewModel: HomeViewModel = koinViewModel()
-            val state = homeViewModel.state.collectAsState()
             HomeScreen(
-                state = state.value,
+                viewModel = homeViewModel,
                 onEvent = {
                     homeViewModel.onEvent(it , onProductClicked = {productId ->
                         navController.navigate(Screens.ProductDetails.createRoute(productId))
                     })
+                },
+                onNavigateToCart = {
+                    navController.navigate(Screens.Cart.route)
                 }
             )
         }
@@ -78,9 +85,8 @@ fun SetupNavGraph(
             })
         ){
             val productDetailsViewModel: ProductDetailsViewModel = koinViewModel()
-            val state by productDetailsViewModel.state.collectAsState()
             ProductDetailsScreen(
-                state = state,
+                viewModel = productDetailsViewModel,
                 onBackClick = {
                     navController.popBackStack()
                 },
@@ -98,6 +104,16 @@ fun SetupNavGraph(
                             inclusive = true
                         }
                     }
+                }
+            )
+        }
+
+        composable(route = Screens.Cart.route){
+            val cartViewModel: CartViewModel = koinViewModel()
+            CartScreen(
+                cartViewModel = cartViewModel,
+                onBackClicked = {
+                    navController.popBackStack()
                 }
             )
         }

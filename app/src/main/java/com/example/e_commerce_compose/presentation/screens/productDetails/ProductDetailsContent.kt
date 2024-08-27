@@ -30,6 +30,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,6 +62,9 @@ fun ProductDetailsContent(
     onEvent: (ProductsDetailsEvents) -> Unit
 ) {
     val product = state.product ?: return
+    var countToAddToCart by remember {
+        mutableIntStateOf(1)
+    }
 
     val pagerState = rememberPagerState {
         product.images?.size ?: 0
@@ -173,7 +181,12 @@ fun ProductDetailsContent(
                         color = PrimaryText
                     )
                     Spacer(modifier = Modifier.width(40.dp))
-                    CountBar(Modifier)
+                    CountBar(
+                        Modifier ,
+                        onCountChange = {
+                            countToAddToCart = it
+                        }
+                    )
                 }
                 Spacer(modifier = Modifier.height(15.dp))
                 Text(
@@ -250,7 +263,15 @@ fun ProductDetailsContent(
 
             AddToCartButton(
                 modifier = Modifier
-                    .clickable { onEvent(ProductsDetailsEvents.AddToWishlist(product.id?:"")) }
+                    .clickable {
+                        if (product.isInCart){
+                            onEvent(ProductsDetailsEvents.RemoveFromCart(productId = product.id?:""))
+                        }else{
+                            onEvent(ProductsDetailsEvents.AddToCart(product.id?:"" , countToAddToCart))
+                        }
+                    },
+                isLoading = state.cartOperationLoading,
+                isInCart = product.isInCart
             )
         }
     }

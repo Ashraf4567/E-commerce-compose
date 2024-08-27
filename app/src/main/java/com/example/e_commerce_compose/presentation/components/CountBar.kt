@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -29,9 +30,12 @@ import com.example.e_commerce_compose.ui.theme.EcommerceComposeTheme
 import com.example.e_commerce_compose.ui.theme.PrimaryBlue
 
 @Composable
-fun CountBar(modifier: Modifier) {
-    
-    var count by remember { mutableIntStateOf(0) }
+fun CountBar(
+    modifier: Modifier,
+    onCountChange: (Int) -> Unit = {},
+    initialCount: Int = 1,
+    isButtonEnabled: Boolean = true
+) {
 
     Row(
         modifier = modifier
@@ -39,26 +43,31 @@ fun CountBar(modifier: Modifier) {
             .height(42.dp)
             .clip(RoundedCornerShape(80.dp))
             .background(PrimaryBlue)
-            .padding(horizontal = 16.dp , vertical = 8.dp)
+            .padding(horizontal = 16.dp , vertical = 4.dp)
         ,
+        verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Image(
             painter = painterResource(id = R.drawable.baseline_add_circle_outline_24),
             contentDescription = "add",
             modifier = Modifier
-                .clickable {
-                    count++
+                .clickable(
+                    enabled = isButtonEnabled
+                ) {
+                    onCountChange(initialCount+1)
                 }
         )
-        Text(text = count.toString() , color = Color.White , fontSize = 18.sp)
+        Text(text = initialCount.toString() , color = Color.White , fontSize = 18.sp)
         Image(
             painter = painterResource(id = R.drawable.baseline_remove_circle_outline_24),
             contentDescription = "remove",
             modifier = Modifier
-                .clickable {
-                    if (count > 0) {
-                        count--
+                .clickable(
+                    enabled = isButtonEnabled
+                ) {
+                    if (initialCount > 0) {
+                        onCountChange(initialCount - 1)
                     }
                 }
         )

@@ -39,7 +39,7 @@ data class ProductDto(
 	@field:SerializedName("price")
 	val price: Int? = null,
 
-	@field:SerializedName("id")
+	@field:SerializedName("_id")
 	val id: String? = null,
 
 	@field:SerializedName("subcategory")

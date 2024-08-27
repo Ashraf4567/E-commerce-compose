@@ -8,11 +8,13 @@ import com.example.e_commerce_compose.domain.model.SignInRequest
 import com.example.e_commerce_compose.domain.repository.AuthRepository
 import com.example.e_commerce_compose.utils.Resource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -24,8 +26,8 @@ class SignInViewModel(
     private val _state = MutableStateFlow(SignInState())
     val state = _state.asStateFlow()
 
-    private val _effect = MutableSharedFlow<SignInEffects>()
-    val effect = _effect.asSharedFlow()
+    private val _effect = Channel<SignInEffects>()
+    val effect = _effect.receiveAsFlow()
 
     fun onEvent(event: SignInEvents){
         when(event){
@@ -69,7 +71,7 @@ class SignInViewModel(
                                 isLoading = false
                             )
                         }
-                        _effect.emit(SignInEffects.ShowToastMessage(result.error.message.toString()))
+                        _effect.send(SignInEffects.ShowToastMessage(result.error.message.toString()))
                     }
                     Resource.Loading -> {
                         _state.update {
@@ -95,7 +97,8 @@ class SignInViewModel(
                                 )
                             )
                         }
-                        _effect.emit(SignInEffects.NavigateToHome)
+                        _effect.send(SignInEffects.ShowToastMessage("Sign in successfully"))
+                        _effect.send(SignInEffects.NavigateToHome)
                     }
                 }
             }

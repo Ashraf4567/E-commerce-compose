@@ -22,7 +22,7 @@ fun CategoriesScreen(
     Scaffold(
         topBar = {
             MyTopAppBar(
-                modifier = Modifier.padding(top = 25.dp),
+                modifier = Modifier.padding(top = 35.dp),
                 showGreeting = false,
                 onQueryChange = {}
             )
@@ -39,8 +39,8 @@ fun CategoriesScreen(
             Row(
                 modifier = Modifier
                     .background(Color.White)
-                    .padding(top = it.calculateTopPadding() + 8.dp, bottom = 8.dp)
-                    .padding(horizontal = 4.dp)
+                    .padding(top = it.calculateTopPadding() + 8.dp, bottom = 8.dp , start = 4.dp , end = 4.dp)
+
                     .fillMaxSize(),
             ) {
                 CategoriesList(

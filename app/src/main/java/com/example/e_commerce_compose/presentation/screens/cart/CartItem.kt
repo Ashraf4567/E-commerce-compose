@@ -1,8 +1,9 @@
-package com.example.e_commerce_compose.presentation.screens.wishlist
+package com.example.e_commerce_compose.presentation.screens.cart
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,8 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,16 +30,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.e_commerce_compose.R
+import com.example.e_commerce_compose.domain.model.Cart
 import com.example.e_commerce_compose.domain.model.Product
+import com.example.e_commerce_compose.presentation.components.CountBar
 import com.example.e_commerce_compose.ui.theme.PrimaryBlue
 import com.example.e_commerce_compose.ui.theme.PrimaryText
 import com.example.e_commerce_compose.ui.theme.poppins
 
 @Composable
-fun ItemWishlist(
+fun CartItem(
     modifier: Modifier = Modifier,
-    product: Product
+    product: Product,
+    onRemoveClick: (id: String) -> Unit,
+    onCountChange: (id: String, count: Int) -> Unit
 ) {
+
     Box(
         modifier = modifier
             .size(width = 398.dp, height = 113.dp)
@@ -51,6 +57,20 @@ fun ItemWishlist(
                 shape = RoundedCornerShape(15.dp)
             )
     ) {
+        if (product.isLoading){
+            Box(
+                modifier = Modifier
+                    .background(PrimaryBlue.copy(alpha = 0.2f))
+                    .fillMaxSize()
+            ){
+                LinearProgressIndicator(
+                    color = PrimaryBlue,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(horizontal = 16.dp)
+                )
+            }
+        }
         Row(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -79,7 +99,6 @@ fun ItemWishlist(
                 Text(
                     text = product.title?.take(12)+"...",
                     fontFamily = poppins,
-                    fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                     color = PrimaryText,
                     maxLines = 1,
@@ -94,29 +113,25 @@ fun ItemWishlist(
             }
         }
         Image(
-            painter = painterResource(id = R.drawable.ic_wishlist_filled),
+            painter = painterResource(id = R.drawable.ic_delete),
             contentDescription = "favorite",
             modifier = Modifier
                 .align(Alignment.TopEnd)
+                .padding(top = 8.dp, end = 8.dp)
+                .clickable {
+                    onRemoveClick(product.id ?: "")
+                }
         )
-        Button(
-            onClick = {},
+        CountBar(
             modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .size(width = 120.dp, height = 40.dp)
-                .padding(end = 8.dp, bottom = 8.dp),
-            shape = RoundedCornerShape(15.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = PrimaryBlue,
-                disabledContainerColor = Color.LightGray
-            ),
-            enabled = true,
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(
-                horizontal = 10.dp,
-                vertical = 4.dp
-            )
-        ) {
-            Text(text = "Add to cart" , fontFamily = poppins , fontSize = 12.sp)
-        }
+                .size(width = 122.dp, height = 42.dp)
+                .padding(end = 8.dp, bottom = 8.dp)
+                .align(Alignment.BottomEnd),
+            onCountChange = {
+                onCountChange(product.id ?: "", it)
+            },
+            initialCount = product.count?:0,
+            isButtonEnabled = !product.isLoading
+        )
     }
 }

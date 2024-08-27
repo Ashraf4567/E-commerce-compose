@@ -19,7 +19,9 @@ data class Product(
 	val slug: String? = null,
 	val updatedAt: String? = null,
 	val isFavorite: Boolean = false,
-	val isInCart: Boolean = false
+	val isInCart: Boolean = false,
+	val count: Int? = null,
+	val isLoading: Boolean = false
 )
 
 

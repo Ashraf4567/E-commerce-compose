@@ -1,5 +1,7 @@
 package com.example.e_commerce_compose.domain.repository
 
+import com.example.e_commerce_compose.data.model.cart.CartResponse
+import com.example.e_commerce_compose.domain.model.CartOperationResponse
 import com.example.e_commerce_compose.domain.model.AddToWishlistRequest
 import com.example.e_commerce_compose.domain.model.Product
 import com.example.e_commerce_compose.utils.Resource
@@ -11,4 +13,6 @@ interface ProductsRepository {
     suspend fun addProductToWishList(addToWishlistRequest: AddToWishlistRequest): Flow<Resource<List<String?>?>>
     suspend fun removeProductFromWishList(productId: String): Flow<Resource<List<String?>?>>
     suspend fun getWishlist(): Flow<Resource<List<Product?>?>>
+
+
 }

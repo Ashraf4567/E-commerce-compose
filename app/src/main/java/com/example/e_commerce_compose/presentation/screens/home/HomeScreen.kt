@@ -18,6 +18,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,9 +41,20 @@ import com.example.e_commerce_compose.presentation.components.MyTopAppBar
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    state: HomeUiState,
-    onEvent: (HomeEvents) -> Unit
+    viewModel: HomeViewModel,
+    onEvent: (HomeEvents) -> Unit,
+    onNavigateToCart: () -> Unit,
 ) {
+    val state by viewModel.state.collectAsState()
+    LaunchedEffect(key1 = Unit) {
+        viewModel.effect.collect{result->
+            when(result){
+                HomeEffects.NavigateToCart -> {
+                    onNavigateToCart()
+                }
+            }
+        }
+    }
     var topBarHeight by remember {
         mutableStateOf(120.dp)
     }
@@ -73,7 +85,10 @@ fun HomeScreen(
                     .height(topBarHeight)
                     .padding(top = 25.dp) ,
                 onQueryChange = {},
-                currentUserName = state.currentUserName
+                currentUserName = state.currentUserName,
+                onNavigateToCart = {
+                    onEvent(HomeEvents.NavigateToCart)
+                }
             )
         }
     ) {

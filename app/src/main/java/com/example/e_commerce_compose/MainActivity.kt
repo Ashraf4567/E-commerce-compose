@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
 //
                 val currentBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = currentBackStackEntry?.destination
-                val screenToHideBottomBar = listOf(Screens.ProductDetails.route , Screens.SignIn.route)
+                val screenToHideBottomBar = listOf(Screens.ProductDetails.route , Screens.SignIn.route, Screens.Cart.route)
 
                 navController.addOnDestinationChangedListener { _, destination, _ ->
                     selectedItemIndex = bottomNavigationItems.indexOfFirst {

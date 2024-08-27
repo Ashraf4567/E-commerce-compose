@@ -11,8 +11,10 @@ import com.example.e_commerce_compose.utils.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -24,6 +26,9 @@ class HomeViewModel(
     private val _state = MutableStateFlow(HomeUiState())
     val state = _state.asStateFlow()
 
+    private val _effect = Channel<HomeEffects>()
+    val effect = _effect.receiveAsFlow()
+
      fun onEvent(event: HomeEvents , onProductClicked : (productId : String) -> Unit) {
         when(event) {
             HomeEvents.LoadData -> {
@@ -33,10 +38,17 @@ class HomeViewModel(
             is HomeEvents.OnProductClicked -> {
                 onProductClicked(event.productId)
             }
+
+            HomeEvents.NavigateToCart -> {
+                viewModelScope.launch {
+                    _effect.send(HomeEffects.NavigateToCart)
+                }
+            }
         }
     }
 
     private fun handleLoadData() {
+        if (_state.value.categoriesList?.isNotEmpty()!! || _state.value.productList?.isNotEmpty()!!) return
         viewModelScope.launch(Dispatchers.IO) {
             val categoriesDeferred = async { loadCategories() }
             val productsDeferred = async { loadProducts() }

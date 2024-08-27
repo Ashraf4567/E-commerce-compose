@@ -25,7 +25,7 @@ fun Wishlist(
     Scaffold(
         topBar = {
             MyTopAppBar(
-                modifier = Modifier.padding(top = 25.dp),
+                modifier = Modifier.padding(top = 35.dp),
                 showGreeting = false,
                 onQueryChange = {}
             )

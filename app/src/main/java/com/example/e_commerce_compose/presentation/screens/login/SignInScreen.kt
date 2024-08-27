@@ -140,8 +140,10 @@ fun SignInScreen(
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = PrimaryBlue,
-                contentColor = MaterialTheme.colorScheme.onPrimary
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                disabledContainerColor = PrimaryBlue.copy(alpha = 0.8f)
             ),
+            enabled = !state.isLoading,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(

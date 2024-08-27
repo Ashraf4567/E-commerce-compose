@@ -6,5 +6,6 @@ data class ProductDetailsState(
     val isLoading: Boolean = false,
     val product: Product? = null,
     val error: String = "",
-    val wishlistOperationLoading: Boolean = false
+    val wishlistOperationLoading: Boolean = false,
+    val cartOperationLoading: Boolean = false
 )

@@ -5,22 +5,31 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.e_commerce_compose.domain.model.AddToWishlistRequest
+import com.example.e_commerce_compose.domain.repository.CartRepository
 import com.example.e_commerce_compose.domain.repository.ProductsRepository
 import com.example.e_commerce_compose.utils.Resource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProductDetailsViewModel(
     savedStateHandle: SavedStateHandle,
-    private val productsRepository: ProductsRepository
+    private val productsRepository: ProductsRepository,
+    private val cartRepository: CartRepository
 ): ViewModel() {
     val productId: String = checkNotNull(savedStateHandle["productId"])
 
     private val _state = MutableStateFlow(ProductDetailsState())
     val state = _state.asStateFlow()
+
+    private val _effect = Channel<ProductDetailsEffects>()
+    val effect = _effect.receiveAsFlow()
 
     init {
         onEvent(ProductsDetailsEvents.LoadProductDetails)
@@ -37,6 +46,80 @@ class ProductDetailsViewModel(
             }
 
             is ProductsDetailsEvents.RemoveFromWishlist -> handleRemoveFromWishlist(event.productId)
+            is ProductsDetailsEvents.AddToCart -> handleAddToCart(event.productId , event.count)
+            is ProductsDetailsEvents.RemoveFromCart -> handleRemoveFromCart(event.productId)
+        }
+    }
+
+    private fun handleRemoveFromCart(productId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            cartRepository.removeProductFromCart(productId).collect{result->
+                when(result){
+                    is Resource.Error -> {
+                        _state.update {
+                            it.copy(
+                                error = result.error.message.toString(),
+                                cartOperationLoading = false
+                            )
+                        }
+                    }
+                    Resource.Loading -> {
+                        _state.update {
+                            it.copy(
+                                cartOperationLoading = true
+                            )
+                        }
+                    }
+                    is Resource.ServerError -> {}
+                    is Resource.Success -> {
+                        _state.update {
+                            it.copy(
+                                product = _state.value.product?.copy(isInCart = false),
+                                cartOperationLoading = false
+                            )
+                        }
+                        _effect.send(ProductDetailsEffects.ShowToast("Product removed from cart"))
+                    }
+                }
+            }
+        }
+    }
+
+    private fun handleAddToCart(productId: String, count: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            for (i in 1..count){
+                cartRepository.addProductToCart(productId).collect{result->
+                    when(result){
+                        is Resource.Error -> {
+                            _state.update {
+                                it.copy(
+                                    error = result.error.message.toString(),
+                                    cartOperationLoading = false
+                                )
+                            }
+                        }
+                        Resource.Loading -> {
+                            _state.update {
+                                it.copy(
+                                    cartOperationLoading = true
+                                )
+                            }
+                        }
+                        is Resource.ServerError -> {}
+                        is Resource.Success -> {
+                            _state.update {
+                                it.copy(
+                                    product = _state.value.product?.copy(isInCart = true),
+                                    cartOperationLoading = false
+                                )
+                            }
+                            if (i == count){
+                                _effect.send(ProductDetailsEffects.ShowToast("Product added to cart successfully"))
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -60,6 +143,7 @@ class ProductDetailsViewModel(
                                 wishlistOperationLoading = false
                             )
                         }
+                        _effect.send(ProductDetailsEffects.ShowToast("Product removed from wishlist"))
                     }
                 }
             }
@@ -67,7 +151,6 @@ class ProductDetailsViewModel(
     }
 
     private fun handleAddToWishlist(productId: String) {
-        Log.d("test add to wishlist", productId)
         viewModelScope.launch(Dispatchers.IO) {
             productsRepository.addProductToWishList(AddToWishlistRequest(
                 productId = productId
@@ -90,10 +173,11 @@ class ProductDetailsViewModel(
                         myProduct.let {
                             _state.update {state->
                                 state.copy(
-                                    product = _state.value.product?.copy(isFavorite = false),
+                                    product = _state.value.product?.copy(isFavorite = true),
                                     wishlistOperationLoading = false
                                 )
                             }
+                            _effect.send(ProductDetailsEffects.ShowToast("Product added to wishlist"))
                         }
 
                     }

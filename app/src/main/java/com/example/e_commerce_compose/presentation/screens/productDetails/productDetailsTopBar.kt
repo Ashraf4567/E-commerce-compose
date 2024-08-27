@@ -26,13 +26,15 @@ import com.example.e_commerce_compose.ui.theme.poppins
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailsTopBar(
+    title: String = "Product Details",
     onBackClicked: () -> Unit,
+    showCartIcon: Boolean = true,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
 ) {
 
     CenterAlignedTopAppBar(
         title = { Text(
-            text = "Product Details",
+            text = title,
             color = PrimaryText,
             fontFamily = poppins,
         )},
@@ -52,14 +54,16 @@ fun ProductDetailsTopBar(
                      tint = PrimaryBlue
                  )
              }
-
-             IconButton(onClick = { /*TODO*/ }) {
-                 Icon(
-                     imageVector = Icons.Outlined.ShoppingCart,
-                     contentDescription = "Cart",
-                     tint = PrimaryBlue
-                 )
+             if (showCartIcon){
+                 IconButton(onClick = { /*TODO*/ }) {
+                     Icon(
+                         imageVector = Icons.Outlined.ShoppingCart,
+                         contentDescription = "Cart",
+                         tint = PrimaryBlue
+                     )
+                 }
              }
+
 
          },
         scrollBehavior = scrollBehavior,
