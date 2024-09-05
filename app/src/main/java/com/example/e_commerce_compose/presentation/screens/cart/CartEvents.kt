@@ -5,4 +5,5 @@ sealed class CartEvents {
     data class RemoveItem(val id: String) : CartEvents()
     data class UpdateProductCount(val id: String, val count: Int) : CartEvents()
     data object BackPressed : CartEvents()
+    data object CheckoutPressed : CartEvents()
 }

@@ -13,7 +13,10 @@ import com.example.e_commerce_compose.domain.model.Category
 import com.example.e_commerce_compose.presentation.components.HomeCategoryItem
 
 @Composable
-fun CategoriesGrid(categoryList: List<Category?>?) {
+fun CategoriesGrid(
+    categoryList: List<Category?>?,
+    onCategoryClicked: (String) -> Unit
+) {
 
     LazyHorizontalGrid(
         modifier = Modifier.height(380.dp),
@@ -24,7 +27,8 @@ fun CategoriesGrid(categoryList: List<Category?>?) {
         items(categoryList?.size ?: 0) {
             categoryList?.get(it)?.let { it1 -> HomeCategoryItem(
                 category = it1,
-                modifier = Modifier.padding(10.dp)
+                modifier = Modifier.padding(10.dp),
+                onCategoryClicked = onCategoryClicked
             ) }
         }
 

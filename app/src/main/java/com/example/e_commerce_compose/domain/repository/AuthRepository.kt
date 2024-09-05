@@ -1,6 +1,5 @@
 package com.example.e_commerce_compose.domain.repository
 
-import com.example.e_commerce_compose.data.model.UserCredentials
 import com.example.e_commerce_compose.domain.model.SignInRequest
 import com.example.e_commerce_compose.domain.model.SignInResponse
 import com.example.e_commerce_compose.utils.Resource

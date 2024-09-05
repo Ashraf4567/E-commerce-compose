@@ -18,6 +18,9 @@ suspend fun <T>safeApiCall(apiCall: suspend ()-> BaseResponse<T>): Flow<Resource
 = flow {
     emit(Resource.Loading)
     val result =  apiCall.invoke()
+    if (result.statusMsg == "fail"){
+        throw Exception(result.message)
+    }
     emit(Resource.Success(result.data , result.metadata))
 }.catch {e->
     when(e){

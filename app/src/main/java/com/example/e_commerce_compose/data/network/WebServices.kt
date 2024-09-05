@@ -1,5 +1,7 @@
 package com.example.e_commerce_compose.data.network
 
+import com.example.e_commerce_compose.data.model.AddNewAddressRequest
+import com.example.e_commerce_compose.data.model.AddressDto
 import com.example.e_commerce_compose.data.model.BaseResponse
 import com.example.e_commerce_compose.data.model.cart.CartResponse
 import com.example.e_commerce_compose.data.model.cart.UpdateQuantityRequest
@@ -9,6 +11,7 @@ import com.example.e_commerce_compose.data.model.products.ProductDto
 import com.example.e_commerce_compose.domain.model.AddToCartRequest
 import com.example.e_commerce_compose.domain.model.CartOperationResponse
 import com.example.e_commerce_compose.domain.model.AddToWishlistRequest
+import com.example.e_commerce_compose.domain.model.Address
 import com.example.e_commerce_compose.domain.model.SignInRequest
 import com.example.e_commerce_compose.domain.model.SignInResponse
 import retrofit2.http.Body
@@ -72,4 +75,13 @@ interface WebServices {
         @Path("id") productId: String,
         @Body updateQuantityRequest: UpdateQuantityRequest
     ): CartResponse
+
+    @POST("api/v1/addresses")
+    suspend fun addAddress(
+        @Body
+        addNewAddressRequest: AddNewAddressRequest
+    ): BaseResponse<List<AddressDto?>?>
+
+    @GET("api/v1/addresses")
+    suspend fun getAddresses(): BaseResponse<List<AddressDto?>?>
 }

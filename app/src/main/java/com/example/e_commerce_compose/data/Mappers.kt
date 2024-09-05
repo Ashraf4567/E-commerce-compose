@@ -1,10 +1,12 @@
 package com.example.e_commerce_compose.data
 
+import com.example.e_commerce_compose.data.model.AddressDto
 import com.example.e_commerce_compose.data.model.cart.ProductsItem
 import com.example.e_commerce_compose.data.model.categories.CategoryDto
 import com.example.e_commerce_compose.data.model.categories.SubCategoryDto
 import com.example.e_commerce_compose.data.model.products.BrandDto
 import com.example.e_commerce_compose.data.model.products.ProductDto
+import com.example.e_commerce_compose.domain.model.Address
 import com.example.e_commerce_compose.domain.model.Brand
 import com.example.e_commerce_compose.domain.model.Category
 import com.example.e_commerce_compose.domain.model.Product
@@ -61,6 +63,16 @@ fun ProductDto.toDomain(): Product {
         isFavorite = false,
         isInCart = false,
     )
+}
+
+fun AddressDto.toDomain(): Address{
+    return Address(
+        id = id,
+        name = name,
+        phone = phone,
+        city = city,
+        details = details
+        )
 }
 
 

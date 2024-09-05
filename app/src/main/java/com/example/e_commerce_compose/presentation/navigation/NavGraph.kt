@@ -1,5 +1,7 @@
 package com.example.e_commerce_compose.presentation.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,10 +16,14 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.e_commerce_compose.presentation.screens.browse_products.BrowseProductsScreen
+import com.example.e_commerce_compose.presentation.screens.browse_products.BrowseProductsViewModel
 import com.example.e_commerce_compose.presentation.screens.cart.CartScreen
 import com.example.e_commerce_compose.presentation.screens.cart.CartViewModel
 import com.example.e_commerce_compose.presentation.screens.categories.CategoriesScreen
 import com.example.e_commerce_compose.presentation.screens.categories.CategoriesViewModel
+import com.example.e_commerce_compose.presentation.screens.checkout.CheckoutScreen
+import com.example.e_commerce_compose.presentation.screens.checkout.CheckoutViewModel
 import com.example.e_commerce_compose.presentation.screens.home.HomeScreen
 import com.example.e_commerce_compose.presentation.screens.home.HomeViewModel
 import com.example.e_commerce_compose.presentation.screens.login.SignInScreen
@@ -43,27 +49,16 @@ fun SetupNavGraph(
             )
     ) {
         composable(route = Screens.Home.route){
-            val homeViewModel: HomeViewModel = koinViewModel()
             HomeScreen(
-                viewModel = homeViewModel,
-                onEvent = {
-                    homeViewModel.onEvent(it , onProductClicked = {productId ->
-                        navController.navigate(Screens.ProductDetails.createRoute(productId))
-                    })
-                },
-                onNavigateToCart = {
-                    navController.navigate(Screens.Cart.route)
-                }
+                navController = navController
             )
         }
         composable(route = Screens.Categories.route){
 
-            val categoriesViewModel: CategoriesViewModel = koinViewModel()
-            val state = categoriesViewModel.state.collectAsState()
-
             CategoriesScreen(
-                state = state.value,
-                onEvent = categoriesViewModel::onEvent
+                navigateToProducts = {
+                    navController.navigate(Screens.BrowseProducts.createRoute(it))
+                }
             )
         }
         composable(route = Screens.WishList.route){
@@ -114,7 +109,35 @@ fun SetupNavGraph(
                 cartViewModel = cartViewModel,
                 onBackClicked = {
                     navController.popBackStack()
+                },
+                onCheckoutClicked = {
+                    navController.navigate(Screens.Checkout.route)
                 }
+            )
+        }
+
+        composable(route = Screens.Checkout.route,
+            // i need no make the enter transition for this screen from bottom to top
+            enterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Up,
+                    animationSpec = tween(400)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Down,
+                    animationSpec = tween(400)
+                )
+            }
+            ){
+            val checkoutViewModel: CheckoutViewModel = koinViewModel()
+            CheckoutScreen(viewModel = checkoutViewModel)
+        }
+
+        composable(route = Screens.BrowseProducts.route){
+            BrowseProductsScreen(
+                navController = navController
             )
         }
 

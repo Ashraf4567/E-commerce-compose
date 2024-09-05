@@ -1,6 +1,7 @@
 package com.example.e_commerce_compose.presentation.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -26,7 +27,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +48,7 @@ import com.example.e_commerce_compose.ui.theme.PrimaryText
 fun HomeProductsItem(
     modifier: Modifier = Modifier,
     product: Product,
+    contentScale: ContentScale = ContentScale.Fit,
     onClick: (productID: String) -> Unit
 ) {
 
@@ -59,6 +63,7 @@ fun HomeProductsItem(
                 color = PrimaryBlue.copy(alpha = 0.3f),
                 shape = RoundedCornerShape(10.dp)
             )
+            .background(Color.White)
             .clickable { onClick(product.id ?: "") }
     ) {
         Column {
@@ -69,6 +74,7 @@ fun HomeProductsItem(
                     .fillMaxWidth()
                     .height(100.dp),
                 placeholder = painterResource(id = R.drawable.placeholder),
+                contentScale = contentScale
 
             )
 

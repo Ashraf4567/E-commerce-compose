@@ -40,10 +40,16 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             EcommerceComposeTheme {
                 var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
-//
+
                 val currentBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = currentBackStackEntry?.destination
-                val screenToHideBottomBar = listOf(Screens.ProductDetails.route , Screens.SignIn.route, Screens.Cart.route)
+                val screenToHideBottomBar = listOf(
+                    Screens.ProductDetails.route,
+                    Screens.SignIn.route,
+                    Screens.Cart.route,
+                    Screens.Checkout.route,
+                    Screens.BrowseProducts.route
+                )
 
                 navController.addOnDestinationChangedListener { _, destination, _ ->
                     selectedItemIndex = bottomNavigationItems.indexOfFirst {

@@ -29,19 +29,27 @@ class HomeViewModel(
     private val _effect = Channel<HomeEffects>()
     val effect = _effect.receiveAsFlow()
 
-     fun onEvent(event: HomeEvents , onProductClicked : (productId : String) -> Unit) {
+     fun onEvent(event: HomeEvents) {
         when(event) {
             HomeEvents.LoadData -> {
                 handleLoadData()
             }
 
             is HomeEvents.OnProductClicked -> {
-                onProductClicked(event.productId)
+                viewModelScope.launch {
+                    _effect.send(HomeEffects.NavigateToProductDetails(event.productId))
+                }
             }
 
             HomeEvents.NavigateToCart -> {
                 viewModelScope.launch {
                     _effect.send(HomeEffects.NavigateToCart)
+                }
+            }
+
+            is HomeEvents.OnCategoryClicked -> {
+                viewModelScope.launch {
+                    _effect.send(HomeEffects.NavigateToBrowseProducts(event.categoryId))
                 }
             }
         }

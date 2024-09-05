@@ -8,17 +8,34 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.e_commerce_compose.presentation.components.MyTopAppBar
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CategoriesScreen(
-    state: CategoriesState,
-    onEvent: (CategoriesEvents) -> Unit
+    viewModel: CategoriesViewModel = koinViewModel(),
+    navigateToProducts: (String) -> Unit
 ) {
+    val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(key1 = Unit){
+        viewModel.effect.collect{effect->
+            when(effect){
+                is CategoriesEffects.NavigateToProducts -> {
+                    navigateToProducts(effect.categoryId)
+                }
+            }
+
+        }
+    }
+
     Scaffold(
         topBar = {
             MyTopAppBar(
@@ -45,13 +62,20 @@ fun CategoriesScreen(
             ) {
                 CategoriesList(
                     modifier = Modifier.weight(.3f),
-                    onItemClick = onEvent,
+                    onItemClick = {
+                        viewModel.onEvent(it)
+                    },
                     state = state
                 )
 
                 SubCategoriesList(
                     modifier = Modifier.weight(.7f),
-                    state = state
+                    state = state,
+                    onItemClick = {subCategoryId ->
+                        viewModel.onEvent(
+                            CategoriesEvents.SubCategoryClicked(subCategoryId)
+                        )
+                    }
                 )
 
 

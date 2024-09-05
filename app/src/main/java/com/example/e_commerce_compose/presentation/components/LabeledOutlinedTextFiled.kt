@@ -23,6 +23,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.e_commerce_compose.ui.theme.PrimaryBlue
+import com.example.e_commerce_compose.ui.theme.PrimaryText
 
 @Composable
 fun LabeledOutlinedTextFiled(
@@ -35,17 +36,24 @@ fun LabeledOutlinedTextFiled(
     isError: Boolean = false,
     errorMessage: String = "",
     imeAction: ImeAction = ImeAction.Next,
+    shape: RoundedCornerShape = RoundedCornerShape(50.dp),
+    minLines: Int = 1,
+    prefix: String = "",
     onValueChange: (String) -> Unit,
 ) {
 
     Column(modifier = modifier) {
-        Text(text = label)
+        Text(
+            text = label,
+            color = PrimaryText,
+            style = MaterialTheme.typography.labelLarge
+        )
         Spacer(modifier = Modifier.height(6.dp))
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            placeholder = { Text(text = placeholder) },
-            shape = RoundedCornerShape(50.dp),
+            placeholder = { Text(text = placeholder , color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)) },
+            shape = shape,
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = PrimaryBlue,
@@ -66,6 +74,10 @@ fun LabeledOutlinedTextFiled(
                 if (isError) {
                     Text(text = errorMessage , color = MaterialTheme.colorScheme.error)
                 }
+            },
+            minLines = minLines,
+            prefix = {
+                Text(text = prefix)
             }
         )
     }

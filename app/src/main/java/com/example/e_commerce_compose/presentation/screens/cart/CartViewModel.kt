@@ -38,6 +38,12 @@ class CartViewModel(
                     _effect.send(CartEffects.NavigateBack)
                 }
             }
+
+            CartEvents.CheckoutPressed -> {
+                viewModelScope.launch {
+                    _effect.send(CartEffects.NavigateToCheckout)
+                }
+            }
         }
     }
 

@@ -34,23 +34,33 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.e_commerce_compose.R
 import com.example.e_commerce_compose.presentation.components.MyTopAppBar
+import com.example.e_commerce_compose.presentation.navigation.Screens
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel,
-    onEvent: (HomeEvents) -> Unit,
-    onNavigateToCart: () -> Unit,
+    viewModel: HomeViewModel = koinViewModel(),
+    navController: NavController,
 ) {
     val state by viewModel.state.collectAsState()
     LaunchedEffect(key1 = Unit) {
         viewModel.effect.collect{result->
             when(result){
                 HomeEffects.NavigateToCart -> {
-                    onNavigateToCart()
+                    navController.navigate(Screens.Cart.route)
+                }
+
+                is HomeEffects.NavigateToBrowseProducts -> {
+                    navController.navigate(Screens.BrowseProducts.createRoute(result.categoryId))
+                }
+
+                is HomeEffects.NavigateToProductDetails -> {
+                    navController.navigate(Screens.ProductDetails.createRoute(result.productId))
                 }
             }
         }
@@ -75,7 +85,7 @@ fun HomeScreen(
     }
 
     LaunchedEffect(key1 = Unit) {
-        onEvent(HomeEvents.LoadData)
+        viewModel.onEvent(HomeEvents.LoadData)
 
     }
     Scaffold(
@@ -87,7 +97,7 @@ fun HomeScreen(
                 onQueryChange = {},
                 currentUserName = state.currentUserName,
                 onNavigateToCart = {
-                    onEvent(HomeEvents.NavigateToCart)
+                    viewModel.onEvent(HomeEvents.NavigateToCart)
                 }
             )
         }
@@ -127,6 +137,9 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(10.dp))
                 CategoriesGrid(
                     categoryList = state.categoriesList,
+                    onCategoryClicked = {categoryId->
+                        viewModel.onEvent(HomeEvents.OnCategoryClicked(categoryId))
+                    }
                 )
                 Text(
                     text = "Video Games",
@@ -140,7 +153,7 @@ fun HomeScreen(
                     modifier = Modifier,
                     products = state.productList,
                     onProductClicked = {productId->
-                        onEvent(HomeEvents.OnProductClicked(productId))
+                        viewModel.onEvent(HomeEvents.OnProductClicked(productId))
                     }
                 )
                 Spacer(modifier = Modifier.height(10.dp))

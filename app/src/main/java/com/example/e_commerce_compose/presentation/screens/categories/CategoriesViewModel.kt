@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.e_commerce_compose.domain.repository.CategoriesRepository
 import com.example.e_commerce_compose.utils.Resource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -14,6 +16,9 @@ class CategoriesViewModel(
 ) : ViewModel() {
 
     val state = MutableStateFlow(CategoriesState())
+
+    private val _effect = MutableSharedFlow<CategoriesEffects>()
+    val effect = _effect.asSharedFlow()
 
     init {
         onEvent(CategoriesEvents.GetCategories)
@@ -28,6 +33,12 @@ class CategoriesViewModel(
             }
             CategoriesEvents.GetCategories -> {
                 getCategories()
+            }
+
+            is CategoriesEvents.SubCategoryClicked -> {
+                viewModelScope.launch {
+                    _effect.emit(CategoriesEffects.NavigateToProducts(categoriesEvents.categoryId))
+                }
             }
         }
     }

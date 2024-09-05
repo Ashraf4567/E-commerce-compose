@@ -33,7 +33,8 @@ import com.example.e_commerce_compose.ui.theme.PrimaryBlue
 @Composable
 fun SubCategoriesList(
     modifier: Modifier,
-    state: CategoriesState
+    state: CategoriesState,
+    onItemClick: (categoryId: String) -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -66,7 +67,12 @@ fun SubCategoriesList(
                             .fillMaxWidth()
                             .padding(horizontal = 8.dp, vertical = 4.dp)
                         ,
-                        subCategoryName = state.subCategories?.get(index)?.name!!
+                        subCategoryName = state.subCategories?.get(index)?.name!!,
+                        onItemClick = {
+                            onItemClick(
+                                state.subCategories[index]?.category?:""
+                            )
+                        }
                     )
                 }
             }
@@ -78,10 +84,11 @@ fun SubCategoriesList(
 @Composable
 fun SubCategoryItem(
     modifier: Modifier,
-    subCategoryName: String
+    subCategoryName: String,
+    onItemClick: () -> Unit
 ) {
     ElevatedCard(
-        onClick = { /*TODO*/ },
+        onClick = onItemClick,
         modifier = modifier,
         shape = RoundedCornerShape(16.dp)
     ) {
