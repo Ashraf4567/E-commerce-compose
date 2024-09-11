@@ -1,4 +1,4 @@
-package com.example.e_commerce_compose.data.model
+package com.example.e_commerce_compose.data.model.address
 
 data class AddNewAddressRequest(
     val name: String? = null,

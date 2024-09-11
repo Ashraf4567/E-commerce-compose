@@ -1,6 +1,9 @@
 package com.example.e_commerce_compose.presentation.screens.productDetails
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -69,6 +72,8 @@ fun ProductDetailsContent(
     val pagerState = rememberPagerState {
         product.images?.size ?: 0
     }
+
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -110,13 +115,20 @@ fun ProductDetailsContent(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         repeat(pagerState.pageCount){
+                            val isCurrentPage = pagerState.currentPage == it
+
+                            // Animate the size of the current page indicator
+                            val indicatorSize by animateDpAsState(
+                                targetValue = if (isCurrentPage) 20.dp else 10.dp, // Change sizes for active/inactive indicators
+                                animationSpec = tween(durationMillis = 150)
+                            )
                             val color = if (pagerState.currentPage == it) PrimaryBlue else PrimaryBlue.copy(alpha = 0.3f)
                             Box(
                                 modifier = Modifier
                                     .padding(2.dp)
                                     .clip(CircleShape)
                                     .background(color)
-                                    .size(10.dp)
+                                    .size(height =  10.dp , width = indicatorSize)
 
                             )
                         }
@@ -234,7 +246,7 @@ fun ProductDetailsContent(
             ){
                 CircularProgressIndicator()
             }
-            if (product.isFavorite){
+            if (product.isFavorite && !state.wishlistOperationLoading){
                 Image(
                     painter = painterResource(id = R.drawable.ic_wishlist_filled),
                     contentDescription = "favorite",
@@ -247,7 +259,7 @@ fun ProductDetailsContent(
                         }
                 )
             }
-            if (!product.isFavorite){
+            if (!product.isFavorite && !state.wishlistOperationLoading){
                 Image(
                     painter = painterResource(id = R.drawable.ic_add_to_wishlis),
                     contentDescription = "favorite",
@@ -267,7 +279,7 @@ fun ProductDetailsContent(
                         if (product.isInCart){
                             onEvent(ProductsDetailsEvents.RemoveFromCart(productId = product.id?:""))
                         }else{
-                            onEvent(ProductsDetailsEvents.AddToCart(product.id?:"" , countToAddToCart))
+                            onEvent(ProductsDetailsEvents.AddToCart(product.id?:""))
                         }
                     },
                 isLoading = state.cartOperationLoading,

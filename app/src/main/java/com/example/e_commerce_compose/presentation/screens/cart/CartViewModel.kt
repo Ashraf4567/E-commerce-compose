@@ -54,50 +54,35 @@ class CartViewModel(
                     is Resource.Error ->{
                         _state.update {
                             it.copy(
-                                cart = it.cart.copy(products = it.cart.products?.map { product ->
-                                    if (product?.id == id){
-                                        product.copy(isLoading = false)
-                                    }else{
-                                        product
-                                    }
-                                }),
-                                error = res.error.message.toString()
+                                specificProductLoading =Pair(id, false) ,
                             )
                         }
                     }
                     Resource.Loading -> {
                         _state.update {
                             it.copy(
-                                cart = _state.value.cart.copy(
-                                    products = it.cart.products?.map { product ->
-                                    if (product?.id == id){
-                                        product.copy(isLoading = true)
-                                    }else{
-                                        product
-                                    }
-                                }
-                                )
+                                specificProductLoading = Pair(id, true)
                             )
                         }
                     }
                     is Resource.ServerError -> {}
                     is Resource.Success -> {
                         // here will get new product to replace with the old and will check by id
-                        val newProduct = res.data?.data?.products?.first {
-                            it?.product?.id == id
-                        }?.mapToDomain()
+
                         _state.update {
                             it.copy(
-                                cart = it.cart.copy(
-                                    products = it.cart.products?.map { product ->
-                                    if (product?.id == id){
-                                        newProduct
-                                    }else{
-                                        product
-                                    }
-                                },
-                                    totalCartPrice = res.data?.data?.totalCartPrice
-                                )
+                                isLoading = false,
+                                cart = Cart(
+                                    cartOwner = res.data?.data?.cartOwner,
+                                    createdAt = res.data?.data?.createdAt,
+                                    id = res.data?.data?.id,
+                                    products = res.data?.data?.products?.map {product->
+                                        product?.mapToDomain()
+                                    },
+                                    totalCartPrice = res.data?.data?.totalCartPrice,
+                                    updatedAt = res.data?.data?.updatedAt
+                                ),
+                                specificProductLoading = Pair(id, false)
                             )
                         }
                     }
@@ -113,15 +98,7 @@ class CartViewModel(
                     is Resource.Error -> {
                         _state.update {
                             it.copy(
-                                cart = it.cart.copy(
-                                    products = it.cart.products?.map { product ->
-                                        if (product?.id == id){
-                                            product.copy(isLoading = false)
-                                        }else{
-                                            product
-                                        }
-                                    }
-                                ),
+                                specificProductLoading = Pair(id, false),
                                 error = res.error.message.toString()
                             )
                         }
@@ -129,15 +106,7 @@ class CartViewModel(
                     Resource.Loading -> {
                         _state.update {
                             it.copy(
-                                cart = it.cart.copy(
-                                    products = it.cart.products?.map { product ->
-                                        if (product?.id == id){
-                                            product.copy(isLoading = true)
-                                        }else{
-                                            product
-                                        }
-                                    }
-                                )
+                                specificProductLoading = Pair(id, true)
                             )
                         }
                     }
@@ -155,7 +124,8 @@ class CartViewModel(
                                     },
                                     totalCartPrice = res.data?.data?.totalCartPrice,
                                     updatedAt = res.data?.data?.updatedAt
-                                )
+                                ),
+                                specificProductLoading = Pair(id, false)
                             )
                         }
                         _effect.send(CartEffects.ShowToast("Product removed from cart successfully"))

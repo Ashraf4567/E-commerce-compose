@@ -104,6 +104,9 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:2.6.1")
     ksp("androidx.room:room-compiler:2.6.1")
 
+    //Decode JWT
+    implementation("com.auth0.android:jwtdecode:2.0.2")
+
 
 
 }

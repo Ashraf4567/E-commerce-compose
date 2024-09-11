@@ -1,8 +1,10 @@
 package com.example.e_commerce_compose.presentation.screens.wishlist
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,7 +40,11 @@ import com.example.e_commerce_compose.ui.theme.poppins
 @Composable
 fun ItemWishlist(
     modifier: Modifier = Modifier,
-    product: Product
+    product: Product,
+    onAddToCart: (id: String) -> Unit = {},
+    onRemoveFromWishlist: () -> Unit = {},
+    isCartOperationLoading: Boolean = false,
+    isWishlistOperationLoading: Boolean = false
 ) {
     Box(
         modifier = modifier
@@ -93,14 +100,27 @@ fun ItemWishlist(
                 )
             }
         }
-        Image(
-            painter = painterResource(id = R.drawable.ic_wishlist_filled),
-            contentDescription = "favorite",
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-        )
+        if (!isWishlistOperationLoading) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_wishlist_filled),
+                contentDescription = "favorite",
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .clickable {
+                        onRemoveFromWishlist()
+                    }
+            )
+        }else{
+            CircularProgressIndicator(
+                modifier = Modifier.size(30.dp)
+                    .align(Alignment.TopEnd)
+                    .padding(end = 8.dp , top = 8.dp),
+                color = PrimaryBlue,
+                strokeWidth = 2.dp
+            )
+        }
         Button(
-            onClick = {},
+            onClick = { onAddToCart(product.id?:"") },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .size(width = 120.dp, height = 40.dp)
@@ -110,13 +130,21 @@ fun ItemWishlist(
                 containerColor = PrimaryBlue,
                 disabledContainerColor = Color.LightGray
             ),
-            enabled = true,
+            enabled = !isCartOperationLoading,
             contentPadding = androidx.compose.foundation.layout.PaddingValues(
                 horizontal = 10.dp,
                 vertical = 4.dp
             )
         ) {
-            Text(text = "Add to cart" , fontFamily = poppins , fontSize = 12.sp)
+            AnimatedVisibility(visible = isCartOperationLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    color = Color.White,
+                    strokeWidth = 2.dp
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+            }
+            Text(text = if (product.isInCart) "remove from cart" else "Add to Cart" , fontFamily = poppins , fontSize = if(product.isInCart) 8.sp else 12.sp)
         }
     }
 }

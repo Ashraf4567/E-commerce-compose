@@ -37,12 +37,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.e_commerce_compose.R
 import com.example.e_commerce_compose.presentation.components.MyTopAppBar
+import com.example.e_commerce_compose.presentation.navigation.Graph
 import com.example.e_commerce_compose.presentation.navigation.Screens
 import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
-fun HomeScreen(
+fun HomeScreenContent(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = koinViewModel(),
     navController: NavController,
@@ -52,7 +53,7 @@ fun HomeScreen(
         viewModel.effect.collect{result->
             when(result){
                 HomeEffects.NavigateToCart -> {
-                    navController.navigate(Screens.Cart.route)
+                    navController.navigate(Graph.CHECKOUT)
                 }
 
                 is HomeEffects.NavigateToBrowseProducts -> {

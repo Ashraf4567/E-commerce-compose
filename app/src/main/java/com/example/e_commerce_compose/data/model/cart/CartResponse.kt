@@ -17,7 +17,7 @@ data class CartResponse(
 	val status: String? = null
 )
 
-data class ProductsItem(
+data class CartProductsItem(
 
 	@field:SerializedName("product")
 	val product: Product? = null,
@@ -120,7 +120,7 @@ data class Data(
 	val id: String? = null,
 
 	@field:SerializedName("products")
-	val products: List<ProductsItem?>? = null,
+	val products: List<CartProductsItem?>? = null,
 
 	@field:SerializedName("updatedAt")
 	val updatedAt: String? = null

@@ -1,17 +1,20 @@
 package com.example.e_commerce_compose.data.network
 
-import com.example.e_commerce_compose.data.model.AddNewAddressRequest
-import com.example.e_commerce_compose.data.model.AddressDto
+import com.example.e_commerce_compose.data.model.address.AddNewAddressRequest
+import com.example.e_commerce_compose.data.model.address.AddressDto
 import com.example.e_commerce_compose.data.model.BaseResponse
+import com.example.e_commerce_compose.data.model.order.CreateCashOrderResponse
+import com.example.e_commerce_compose.data.model.address.ShippingAddressRequest
 import com.example.e_commerce_compose.data.model.cart.CartResponse
 import com.example.e_commerce_compose.data.model.cart.UpdateQuantityRequest
 import com.example.e_commerce_compose.data.model.categories.CategoryDto
 import com.example.e_commerce_compose.data.model.categories.SubCategoryDto
+import com.example.e_commerce_compose.data.model.order.UserOrdersResponse
+import com.example.e_commerce_compose.data.model.products.BrandDto
 import com.example.e_commerce_compose.data.model.products.ProductDto
 import com.example.e_commerce_compose.domain.model.AddToCartRequest
 import com.example.e_commerce_compose.domain.model.CartOperationResponse
 import com.example.e_commerce_compose.domain.model.AddToWishlistRequest
-import com.example.e_commerce_compose.domain.model.Address
 import com.example.e_commerce_compose.domain.model.SignInRequest
 import com.example.e_commerce_compose.domain.model.SignInResponse
 import retrofit2.http.Body
@@ -31,10 +34,12 @@ interface WebServices {
     suspend fun getSubCategories(@Path("id")categoryId: String): BaseResponse<List<SubCategoryDto?>?>
 
     @GET("api/v1/products")
-    suspend fun getProductsByCategory(
-        @Query("category") categoryId: String,
-        @Query("sort") sort: String = "price",
-        @Query("limit") limit: Int = 10
+    suspend fun getProductsByFilters(
+        @Query("category") categoryId: String? = null,
+        @Query("sort") sort: String? = null,
+        @Query("limit") limit: Int? = null,
+        @Query("brand") brand: String? = null,
+        @Query("price[gte]") minPrice: Int? = null,
     ): BaseResponse<List<ProductDto?>?>
 
     @GET("api/v1/products/{id}")
@@ -84,4 +89,19 @@ interface WebServices {
 
     @GET("api/v1/addresses")
     suspend fun getAddresses(): BaseResponse<List<AddressDto?>?>
+
+    @GET("/api/v1/brands")
+    suspend fun getBrands(): BaseResponse<List<BrandDto?>?>
+
+    @POST("api/v1/orders/{cartId}")
+    suspend fun createCashOrder(
+        @Body
+        shippingAddressRequest: ShippingAddressRequest,
+        @Path("cartId") cartId: String
+    ): BaseResponse<CreateCashOrderResponse?>
+
+    @GET("api/v1/orders/user/{id}")
+    suspend fun getUserOrders(
+        @Path("id") userId: String
+    ):UserOrdersResponse
 }

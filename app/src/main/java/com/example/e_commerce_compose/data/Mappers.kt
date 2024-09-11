@@ -1,7 +1,6 @@
 package com.example.e_commerce_compose.data
 
-import com.example.e_commerce_compose.data.model.AddressDto
-import com.example.e_commerce_compose.data.model.cart.ProductsItem
+import com.example.e_commerce_compose.data.model.address.AddressDto
 import com.example.e_commerce_compose.data.model.categories.CategoryDto
 import com.example.e_commerce_compose.data.model.categories.SubCategoryDto
 import com.example.e_commerce_compose.data.model.products.BrandDto

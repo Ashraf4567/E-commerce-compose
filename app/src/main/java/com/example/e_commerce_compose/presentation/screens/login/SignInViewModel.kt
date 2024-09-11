@@ -1,7 +1,11 @@
 package com.example.e_commerce_compose.presentation.screens.login
 
+import android.util.Log
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.auth0.android.jwt.JWT
 import com.example.e_commerce_compose.data.local.DataStoreManager
 import com.example.e_commerce_compose.data.model.UserCredentials
 import com.example.e_commerce_compose.domain.model.SignInRequest
@@ -89,8 +93,11 @@ class SignInViewModel(
                             )
                         }
                         result.let {myResult ->
+                            val token = myResult.data?.token
+                            val jwt = token?.let { JWT(it) }
                             dataStoreManager.saveUserToDataStore(
                                 UserCredentials(
+                                    id = jwt?.getClaim("id")?.asString()?:"",
                                     email = myResult.data?.user?.email!!,
                                     name = myResult.data.user.name!!,
                                     token = myResult.data.token!!

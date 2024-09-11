@@ -21,7 +21,6 @@ data class Product(
 	val isFavorite: Boolean = false,
 	val isInCart: Boolean = false,
 	val count: Int? = null,
-	val isLoading: Boolean = false
 )
 
 

@@ -4,12 +4,16 @@ import com.example.e_commerce_compose.data.repositoryImpl.AddressRepositoryImpl
 import com.example.e_commerce_compose.data.repositoryImpl.AuthRepositoryImpl
 import com.example.e_commerce_compose.data.repositoryImpl.CartRepositoryImpl
 import com.example.e_commerce_compose.data.repositoryImpl.CategoryRepositoryImpl
+import com.example.e_commerce_compose.data.repositoryImpl.OrdersRepositoryImpl
 import com.example.e_commerce_compose.data.repositoryImpl.ProductsRepositoryImpl
+import com.example.e_commerce_compose.data.repositoryImpl.WishListRepositoryImpl
 import com.example.e_commerce_compose.domain.repository.AddressRepository
 import com.example.e_commerce_compose.domain.repository.AuthRepository
 import com.example.e_commerce_compose.domain.repository.CartRepository
 import com.example.e_commerce_compose.domain.repository.CategoriesRepository
+import com.example.e_commerce_compose.domain.repository.OrdersRepository
 import com.example.e_commerce_compose.domain.repository.ProductsRepository
+import com.example.e_commerce_compose.domain.repository.WishListRepository
 import com.example.e_commerce_compose.presentation.screens.browse_products.BrowseProductsViewModel
 import com.example.e_commerce_compose.presentation.screens.cart.CartViewModel
 import com.example.e_commerce_compose.presentation.screens.categories.CategoriesViewModel
@@ -27,12 +31,15 @@ val repositoriesModule = module {
     single<AuthRepository> { AuthRepositoryImpl(get()) }
     single<CartRepository> { CartRepositoryImpl( get() , get() ) }
     single<AddressRepository> { AddressRepositoryImpl(get()) }
+    single<OrdersRepository> { OrdersRepositoryImpl(get() , get()) }
+    single<WishListRepository> { WishListRepositoryImpl(get() , get()) }
+
     viewModel { CategoriesViewModel(get()) }
     viewModel { HomeViewModel(get() , get() , get()) }
-    viewModel { ProductDetailsViewModel(get() , get() , get()) }
+    viewModel { ProductDetailsViewModel(get() , get() , get() , get() ) }
     viewModel{SignInViewModel(get() , get())}
-    viewModel { WishlistViewModel(get()) }
+    viewModel { WishlistViewModel(get() , get()) }
     viewModel { CartViewModel(get()) }
-    viewModel { CheckoutViewModel(get()) }
+    viewModel { CheckoutViewModel(get() , get() , get() ) }
     viewModel { BrowseProductsViewModel(get() , get()) }
 }

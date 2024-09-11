@@ -12,7 +12,7 @@ import java.io.OutputStream
 
 object UserSerializer: Serializer<UserCredentials> {
     override val defaultValue: UserCredentials
-        get() = UserCredentials("" , "", "")
+        get() = UserCredentials("" , "", "" , "")
 
     override suspend fun readFrom(input: InputStream): UserCredentials {
         return try {

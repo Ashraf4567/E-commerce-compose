@@ -8,4 +8,6 @@ data class CartState(
     val isCartEmpty: Boolean = false,
     val isLoading: Boolean = false,
     val error: String = "",
+    //map for isLoading for specific product
+    val specificProductLoading : Pair<String, Boolean> = Pair("", false)
 )

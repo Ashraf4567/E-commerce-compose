@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.e_commerce_compose.bottomNavigationItems
 import com.example.e_commerce_compose.ui.theme.PrimaryBlue
 
@@ -29,7 +30,7 @@ fun BottomNavBar(
     navController: NavHostController,
     onSelectedItem: (Int) -> Unit
 ) {
-    var selectedItemIndex by remember { mutableIntStateOf(0) }
+    val currentDestination = navController.currentBackStackEntryAsState().value?.destination
     NavigationBar(
         containerColor = PrimaryBlue,
         modifier = Modifier
@@ -47,9 +48,8 @@ fun BottomNavBar(
                 colors = NavigationBarItemDefaults.colors(
                     indicatorColor = Color.White,
                 ),
-                selected = selectedItemIndex == index ,
+                selected = currentDestination?.route == item.route ,
                 onClick = {
-                    selectedItemIndex = index
                     navController.navigate(item.route) {
                         popUpTo(navController.graph.startDestinationId){
                             saveState = true
@@ -62,7 +62,7 @@ fun BottomNavBar(
                     Icon(
                         painter = painterResource(id = item.iconRes),
                         contentDescription = "",
-                        tint = if (selectedItemIndex == index) PrimaryBlue else Color.White,
+                        tint = if (currentDestination?.route == item.route) PrimaryBlue else Color.White,
                         modifier = Modifier.size(35.dp)
                     )
                 },

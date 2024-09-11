@@ -34,7 +34,8 @@ fun CountBar(
     modifier: Modifier,
     onCountChange: (Int) -> Unit = {},
     initialCount: Int = 1,
-    isButtonEnabled: Boolean = true
+    isPlusButtonEnabled: Boolean = true,
+    isMinusButtonEnabled: Boolean = true,
 ) {
 
     Row(
@@ -53,7 +54,7 @@ fun CountBar(
             contentDescription = "add",
             modifier = Modifier
                 .clickable(
-                    enabled = isButtonEnabled
+                    enabled = isPlusButtonEnabled
                 ) {
                     onCountChange(initialCount+1)
                 }
@@ -64,7 +65,7 @@ fun CountBar(
             contentDescription = "remove",
             modifier = Modifier
                 .clickable(
-                    enabled = isButtonEnabled
+                    enabled = isMinusButtonEnabled
                 ) {
                     if (initialCount > 0) {
                         onCountChange(initialCount - 1)

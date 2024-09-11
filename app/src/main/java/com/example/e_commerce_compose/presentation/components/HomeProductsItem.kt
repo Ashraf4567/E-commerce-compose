@@ -117,9 +117,10 @@ fun HomeProductsItem(
             }
         }
         Image(
-            painter = painterResource(id = R.drawable.ic_add_home),
+            painter = painterResource(id = if(product.isInCart) R.drawable.ic_in_cart else R.drawable.ic_add_home),
             contentDescription = "add",
             modifier = Modifier
+                .size(if(product.isInCart) 40.dp else 35.dp)
                 .align(Alignment.BottomEnd)
                 .padding(bottom = 6.dp, end = 6.dp)
                 .clip(CircleShape)

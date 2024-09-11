@@ -61,12 +61,12 @@ fun AddToCartButton(
             )
         }
         Text(
-            text = "Add to cart",
+            text = if (!isInCart) "Add to cart" else "Remove from cart",
             textAlign = TextAlign.Center,
             color = Color.White,
             modifier = Modifier.weight(1f),
             fontFamily = poppins,
-            fontSize = 20.sp
+            fontSize = if (!isInCart) 20.sp else 15.sp
         )
         AnimatedVisibility(visible = isLoading) {
             CircularProgressIndicator(

@@ -41,6 +41,7 @@ import com.example.e_commerce_compose.ui.theme.poppins
 fun CartItem(
     modifier: Modifier = Modifier,
     product: Product,
+    isLoading: Boolean = false,
     onRemoveClick: (id: String) -> Unit,
     onCountChange: (id: String, count: Int) -> Unit
 ) {
@@ -57,7 +58,7 @@ fun CartItem(
                 shape = RoundedCornerShape(15.dp)
             )
     ) {
-        if (product.isLoading){
+        if (isLoading){
             Box(
                 modifier = Modifier
                     .background(PrimaryBlue.copy(alpha = 0.2f))
@@ -131,7 +132,8 @@ fun CartItem(
                 onCountChange(product.id ?: "", it)
             },
             initialCount = product.count?:0,
-            isButtonEnabled = !product.isLoading
+            isPlusButtonEnabled = !isLoading,
+            isMinusButtonEnabled = !isLoading || (product.count ?: 0) != 1
         )
     }
 }

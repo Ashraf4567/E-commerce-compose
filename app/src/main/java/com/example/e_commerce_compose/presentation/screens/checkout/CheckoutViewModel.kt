@@ -1,27 +1,42 @@
 package com.example.e_commerce_compose.presentation.screens.checkout
 
+import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.e_commerce_compose.data.model.AddNewAddressRequest
+import com.example.e_commerce_compose.data.model.address.AddNewAddressRequest
+import com.example.e_commerce_compose.data.model.address.ShippingAddressDto
+import com.example.e_commerce_compose.data.model.address.ShippingAddressRequest
 import com.example.e_commerce_compose.data.toDomain
 import com.example.e_commerce_compose.domain.model.Address
 import com.example.e_commerce_compose.domain.repository.AddressRepository
+import com.example.e_commerce_compose.domain.repository.OrdersRepository
 import com.example.e_commerce_compose.utils.Resource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CheckoutViewModel(
-    private val addressRepository: AddressRepository
+    savedStateHandle: SavedStateHandle,
+    private val addressRepository: AddressRepository,
+    private val ordersRepository: OrdersRepository
 ): ViewModel() {
 
+    private val cartId = checkNotNull(savedStateHandle.get<String>("cartId"))
     private val _state = MutableStateFlow(CheckoutState())
     val state = _state.asStateFlow()
 
+    private val _effects = MutableSharedFlow<CheckoutEffects>()
+    val effects = _effects.asSharedFlow()
+
+
     init {
         onEvent(CheckoutEvents.GetCurrentAddress)
+        Log.d("CheckoutViewModel", "cartId: $cartId")
     }
 
     fun onEvent(event: CheckoutEvents) {
@@ -76,8 +91,54 @@ class CheckoutViewModel(
             is CheckoutEvents.SetSelectedAddress -> {
                 _state.update {
                     it.copy(
-                        selectedAddressId = event.addressId
+                        selectedAddress = event.address
                     )
+                }
+            }
+
+            CheckoutEvents.ConfirmOrderClicked -> handleConfirmOrder()
+        }
+    }
+
+    private fun handleConfirmOrder() {
+        viewModelScope.launch(Dispatchers.IO) {
+            ordersRepository.createCashOrder(
+                shippingAddressRequest = ShippingAddressRequest(
+                    shippingAddress = ShippingAddressDto(
+                        details = _state.value.selectedAddress?.details?:"",
+                        phone = _state.value.selectedAddress?.phone?:"",
+                        city = _state.value.selectedAddress?.city?:""
+                    )
+                ),
+                cartId = cartId
+
+            ).collect{result->
+                when(result){
+                    is Resource.Error -> {
+                        _effects.emit(
+                            CheckoutEffects.ShowToast(result.error.message?:"Something went wrong")
+                        )
+                    }
+                    Resource.Loading -> {
+                        _state.update {
+                            it.copy(
+                                mainLoading = true
+                            )
+                        }
+                    }
+                    is Resource.ServerError -> {
+                        _effects.emit(
+                            CheckoutEffects.ShowToast(result.error.message?:"Something went wrong")
+                        )
+                    }
+                    is Resource.Success -> {
+                        _effects.emit(
+                            CheckoutEffects.NavigateToSuccess(
+                                totalPrice = result.data?.totalOrderPrice?.toDouble()?:0.0,
+                                paymentMethod = result.data?.paymentMethodType?:""
+                            )
+                        )
+                    }
                 }
             }
         }
@@ -97,7 +158,7 @@ class CheckoutViewModel(
                     Resource.Loading -> {
                         _state.update {
                             it.copy(
-                                getAddressesLoading = true
+                                mainLoading = true
                             )
                         }
                     }
@@ -105,7 +166,7 @@ class CheckoutViewModel(
                         _state.update {
                             it.copy(
                                 errorMessage = result.error.message,
-                                getAddressesLoading = false
+                                mainLoading = false
                             )
                         }
                     }
@@ -115,8 +176,8 @@ class CheckoutViewModel(
                                 userAddresses = result.data?.map {addressDto->
                                     addressDto?.toDomain()?: Address()
                                 }?: emptyList(),
-                                getAddressesLoading = false,
-                                selectedAddressId = result.data?.firstOrNull()?.id
+                                mainLoading = false,
+                                selectedAddress = result.data?.firstOrNull()?.toDomain()
                             )
                         }
                     }

@@ -1,18 +1,16 @@
 package com.example.e_commerce_compose.presentation.screens.productDetails
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.e_commerce_compose.domain.model.AddToWishlistRequest
 import com.example.e_commerce_compose.domain.repository.CartRepository
 import com.example.e_commerce_compose.domain.repository.ProductsRepository
+import com.example.e_commerce_compose.domain.repository.WishListRepository
 import com.example.e_commerce_compose.utils.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
@@ -21,6 +19,7 @@ import kotlinx.coroutines.launch
 class ProductDetailsViewModel(
     savedStateHandle: SavedStateHandle,
     private val productsRepository: ProductsRepository,
+    private val wishListRepository: WishListRepository,
     private val cartRepository: CartRepository
 ): ViewModel() {
     val productId: String = checkNotNull(savedStateHandle["productId"])
@@ -46,7 +45,7 @@ class ProductDetailsViewModel(
             }
 
             is ProductsDetailsEvents.RemoveFromWishlist -> handleRemoveFromWishlist(event.productId)
-            is ProductsDetailsEvents.AddToCart -> handleAddToCart(event.productId , event.count)
+            is ProductsDetailsEvents.AddToCart -> handleAddToCart(event.productId)
             is ProductsDetailsEvents.RemoveFromCart -> handleRemoveFromCart(event.productId)
         }
     }
@@ -85,47 +84,47 @@ class ProductDetailsViewModel(
         }
     }
 
-    private fun handleAddToCart(productId: String, count: Int) {
+    private fun handleAddToCart(productId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            for (i in 1..count){
-                cartRepository.addProductToCart(productId).collect{result->
-                    when(result){
-                        is Resource.Error -> {
-                            _state.update {
-                                it.copy(
-                                    error = result.error.message.toString(),
-                                    cartOperationLoading = false
-                                )
-                            }
+
+            cartRepository.addProductToCart(productId).collect{result->
+                when(result){
+                    is Resource.Error -> {
+                        _state.update {
+                            it.copy(
+                                error = result.error.message.toString(),
+                                cartOperationLoading = false
+                            )
                         }
-                        Resource.Loading -> {
-                            _state.update {
-                                it.copy(
-                                    cartOperationLoading = true
-                                )
-                            }
+                    }
+                    Resource.Loading -> {
+                        _state.update {
+                            it.copy(
+                                cartOperationLoading = true
+                            )
                         }
-                        is Resource.ServerError -> {}
-                        is Resource.Success -> {
-                            _state.update {
-                                it.copy(
-                                    product = _state.value.product?.copy(isInCart = true),
-                                    cartOperationLoading = false
-                                )
-                            }
-                            if (i == count){
-                                _effect.send(ProductDetailsEffects.ShowToast("Product added to cart successfully"))
-                            }
+                    }
+                    is Resource.ServerError -> {}
+                    is Resource.Success -> {
+                        _state.update {
+                            it.copy(
+                                product = _state.value.product?.copy(isInCart = true),
+                                cartOperationLoading = false
+                            )
                         }
+
+                        _effect.send(ProductDetailsEffects.ShowToast("Product added to cart successfully"))
+
                     }
                 }
             }
+
         }
     }
 
     private fun handleRemoveFromWishlist(productId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            productsRepository.removeProductFromWishList(productId).collect{result->
+            wishListRepository.removeProductFromWishList(productId).collect{result->
                 when(result){
                     is Resource.Error -> {}
                     Resource.Loading -> {
@@ -152,7 +151,7 @@ class ProductDetailsViewModel(
 
     private fun handleAddToWishlist(productId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            productsRepository.addProductToWishList(AddToWishlistRequest(
+            wishListRepository.addProductToWishList(AddToWishlistRequest(
                 productId = productId
             )).collect{ result->
                 when(result){

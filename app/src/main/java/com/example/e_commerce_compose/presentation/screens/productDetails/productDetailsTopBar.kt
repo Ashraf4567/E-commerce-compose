@@ -29,6 +29,7 @@ fun ProductDetailsTopBar(
     title: String = "Product Details",
     onBackClicked: () -> Unit,
     showCartIcon: Boolean = true,
+    onFilterClicked: () -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
 ) {
 
@@ -60,6 +61,14 @@ fun ProductDetailsTopBar(
                          imageVector = Icons.Outlined.ShoppingCart,
                          contentDescription = "Cart",
                          tint = PrimaryBlue
+                     )
+                 }
+             }
+             if (!showCartIcon) {
+                 IconButton(onClick = onFilterClicked) {
+                     Icon(
+                         painter = painterResource(R.drawable.baseline_filter_list_24),
+                         contentDescription = "filter"
                      )
                  }
              }
