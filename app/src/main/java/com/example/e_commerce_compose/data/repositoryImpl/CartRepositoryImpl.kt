@@ -6,7 +6,7 @@ import com.example.e_commerce_compose.data.model.cart.CartResponse
 import com.example.e_commerce_compose.data.model.cart.UpdateQuantityRequest
 import com.example.e_commerce_compose.data.network.WebServices
 import com.example.e_commerce_compose.data.safeApiCall
-import com.example.e_commerce_compose.domain.model.AddToCartRequest
+import com.example.e_commerce_compose.data.model.cart.AddToCartRequest
 import com.example.e_commerce_compose.domain.model.CartOperationResponse
 import com.example.e_commerce_compose.domain.repository.CartRepository
 import com.example.e_commerce_compose.utils.Resource
@@ -20,7 +20,7 @@ class CartRepositoryImpl(private val webServices: WebServices , private val cart
     override suspend fun getCart(): Flow<Resource<CartResponse>> = flow {
         emit(Resource.Loading)
         try {
-            emit(Resource.Success(webServices.getCart() , null))
+            emit(Resource.Success(webServices.getCart()))
         }catch (e: Exception){
             emit(Resource.Error(Exception(e.message)))
         }
@@ -31,7 +31,7 @@ class CartRepositoryImpl(private val webServices: WebServices , private val cart
         emit(Resource.Loading)
         try {
             cartDao.deleteById(productId)
-            emit(Resource.Success(webServices.removeProductFromCart(productId) , null))
+            emit(Resource.Success(webServices.removeProductFromCart(productId)))
 
         }catch (e: Exception){
             emit(Resource.Error(Exception(e.message)))
@@ -47,7 +47,7 @@ class CartRepositoryImpl(private val webServices: WebServices , private val cart
             val success = Resource.Success(webServices.updateProductCountInCart(
                 productId = productId,
                 updateQuantityRequest = UpdateQuantityRequest(count)
-            ),null)
+            ))
             emit(success)
 
         }catch (e: Exception){

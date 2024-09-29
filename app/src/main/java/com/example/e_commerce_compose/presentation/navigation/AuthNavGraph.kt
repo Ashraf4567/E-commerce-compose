@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.e_commerce_compose.presentation.screens.login.SignInScreen
 import com.example.e_commerce_compose.presentation.screens.login.SignInViewModel
+import com.example.e_commerce_compose.presentation.screens.signup.SignupScreen
 import org.koin.androidx.compose.koinViewModel
 
 fun NavGraphBuilder.authNavGraph(navController: NavHostController){
@@ -17,14 +18,11 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController){
             val signInViewModel: SignInViewModel = koinViewModel()
             SignInScreen(
                 viewModel = signInViewModel,
-                onNavigateToHome = {
-                    navController.navigate(Graph.Home){
-                        popUpTo(Screens.SignIn.route){
-                            inclusive = true
-                        }
-                    }
-                }
+                navController = navController
             )
+        }
+        composable(route = Screens.SignUp.route){
+            SignupScreen(navController = navController)
         }
     }
 }

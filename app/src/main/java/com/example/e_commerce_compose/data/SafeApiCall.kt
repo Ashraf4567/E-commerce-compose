@@ -21,7 +21,7 @@ suspend fun <T>safeApiCall(apiCall: suspend ()-> BaseResponse<T>): Flow<Resource
     if (result.statusMsg == "fail"){
         throw Exception(result.message)
     }
-    emit(Resource.Success(result.data , result.metadata))
+    emit(Resource.Success(result.data))
 }.catch {e->
     when(e){
         is TimeoutException ->{

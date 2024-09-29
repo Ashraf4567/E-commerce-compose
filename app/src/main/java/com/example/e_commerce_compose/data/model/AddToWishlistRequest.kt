@@ -1,4 +1,4 @@
-package com.example.e_commerce_compose.domain.model
+package com.example.e_commerce_compose.data.model
 
 data class AddToWishlistRequest(
     val productId: String,

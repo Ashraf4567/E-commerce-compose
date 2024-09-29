@@ -3,7 +3,7 @@ package com.example.e_commerce_compose.presentation.screens.productDetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.e_commerce_compose.domain.model.AddToWishlistRequest
+import com.example.e_commerce_compose.data.model.AddToWishlistRequest
 import com.example.e_commerce_compose.domain.repository.CartRepository
 import com.example.e_commerce_compose.domain.repository.ProductsRepository
 import com.example.e_commerce_compose.domain.repository.WishListRepository
@@ -151,9 +151,11 @@ class ProductDetailsViewModel(
 
     private fun handleAddToWishlist(productId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            wishListRepository.addProductToWishList(AddToWishlistRequest(
+            wishListRepository.addProductToWishList(
+                AddToWishlistRequest(
                 productId = productId
-            )).collect{ result->
+            )
+            ).collect{ result->
                 when(result){
                     is Resource.Error -> {
                     }

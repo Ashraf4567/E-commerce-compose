@@ -33,12 +33,7 @@ fun Home(
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
 
-    navController.addOnDestinationChangedListener { _, destination, _ ->
-        selectedItemIndex = bottomNavigationItems.indexOfFirst {
-            it.route == destination.route
-        }.coerceAtLeast(0)
 
-    }
     val bottomBarDistinctions = screens.any { it == currentDestination?.route }
 
     Scaffold(modifier = Modifier

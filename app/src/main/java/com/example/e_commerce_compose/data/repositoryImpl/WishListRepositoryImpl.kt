@@ -5,7 +5,7 @@ import com.example.e_commerce_compose.data.local.wishlist.WishlistEntity
 import com.example.e_commerce_compose.data.network.WebServices
 import com.example.e_commerce_compose.data.safeApiCall
 import com.example.e_commerce_compose.data.toDomain
-import com.example.e_commerce_compose.domain.model.AddToWishlistRequest
+import com.example.e_commerce_compose.data.model.AddToWishlistRequest
 import com.example.e_commerce_compose.domain.model.Product
 import com.example.e_commerce_compose.domain.repository.WishListRepository
 import com.example.e_commerce_compose.utils.Resource
@@ -37,8 +37,7 @@ class WishListRepositoryImpl(
                     Resource.Success(
                         resource.data?.map {dto->
                             dto?.toDomain()?.copy(isFavorite = true , isInCart = wishlist.contains(dto.id))
-                        },
-                        resource.metadata
+                        }
                     )
                 }
             }

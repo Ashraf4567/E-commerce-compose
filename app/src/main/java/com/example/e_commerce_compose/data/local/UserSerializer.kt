@@ -2,7 +2,7 @@ package com.example.e_commerce_compose.data.local
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
-import com.example.e_commerce_compose.data.model.UserCredentials
+import com.example.e_commerce_compose.data.model.user.UserCredentials
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerializationException

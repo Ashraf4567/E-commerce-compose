@@ -1,8 +1,5 @@
 package com.example.e_commerce_compose.domain.repository
 
-import com.example.e_commerce_compose.data.model.cart.CartResponse
-import com.example.e_commerce_compose.domain.model.CartOperationResponse
-import com.example.e_commerce_compose.domain.model.AddToWishlistRequest
 import com.example.e_commerce_compose.domain.model.Brand
 import com.example.e_commerce_compose.domain.model.Product
 import com.example.e_commerce_compose.utils.Resource

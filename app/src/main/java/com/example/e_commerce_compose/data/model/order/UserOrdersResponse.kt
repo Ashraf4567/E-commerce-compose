@@ -3,11 +3,6 @@ package com.example.e_commerce_compose.data.model.order
 import com.example.e_commerce_compose.data.model.cart.CartProductsItem
 import com.google.gson.annotations.SerializedName
 
-data class UserOrdersResponse(
-
-	@field:SerializedName("UserOrdersResponse")
-	val userOrdersResponse: List<UserOrdersResponseItem?>? = null
-)
 
 data class UserOrdersResponseItem(
 

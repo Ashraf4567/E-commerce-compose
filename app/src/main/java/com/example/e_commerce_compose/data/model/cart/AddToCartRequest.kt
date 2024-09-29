@@ -1,4 +1,4 @@
-package com.example.e_commerce_compose.domain.model
+package com.example.e_commerce_compose.data.model.cart
 
 data class AddToCartRequest(
     val productId: String,

@@ -27,7 +27,7 @@ class CategoryRepositoryImpl(private val webServices: WebServices): CategoriesRe
                 is Resource.Error -> it
                 is Resource.Loading -> it
                 is Resource.ServerError -> it
-                is Resource.Success -> Resource.Success(it.data?.map { res -> res?.toDomainModel() }, it.metadata)
+                is Resource.Success -> Resource.Success(it.data?.map { res -> res?.toDomainModel() })
             }
             categoriesCache.value = result
             result
@@ -41,7 +41,7 @@ class CategoryRepositoryImpl(private val webServices: WebServices): CategoriesRe
                 is Resource.Loading -> response
                 is Resource.ServerError -> response
                 is Resource.Success -> {
-                    Resource.Success(response.data?.map { res-> res?.toDomain() } , response.metadata)
+                    Resource.Success(response.data?.map { res-> res?.toDomain() })
                 }
             }
         }

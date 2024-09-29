@@ -1,7 +1,6 @@
 package com.example.e_commerce_compose.presentation.screens.productDetails
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.ShoppingCart
@@ -13,19 +12,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.e_commerce_compose.R
-import com.example.e_commerce_compose.ui.theme.EcommerceComposeTheme
 import com.example.e_commerce_compose.ui.theme.PrimaryBlue
 import com.example.e_commerce_compose.ui.theme.PrimaryText
 import com.example.e_commerce_compose.ui.theme.poppins
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductDetailsTopBar(
+fun MyTopBar(
     title: String = "Product Details",
     onBackClicked: () -> Unit,
     showCartIcon: Boolean = true,

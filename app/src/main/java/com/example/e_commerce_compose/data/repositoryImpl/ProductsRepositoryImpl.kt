@@ -2,11 +2,9 @@ package com.example.e_commerce_compose.data.repositoryImpl
 
 import com.example.e_commerce_compose.data.local.cart.CartDao
 import com.example.e_commerce_compose.data.local.wishlist.WishlistDao
-import com.example.e_commerce_compose.data.local.wishlist.WishlistEntity
 import com.example.e_commerce_compose.data.network.WebServices
 import com.example.e_commerce_compose.data.safeApiCall
 import com.example.e_commerce_compose.data.toDomain
-import com.example.e_commerce_compose.domain.model.AddToWishlistRequest
 import com.example.e_commerce_compose.domain.model.Brand
 import com.example.e_commerce_compose.domain.model.Product
 import com.example.e_commerce_compose.domain.repository.ProductsRepository
@@ -50,8 +48,7 @@ class ProductsRepositoryImpl(
                             isFavorite = favoriteIds.contains(dto.id),
                             isInCart = cartIds.contains(dto.id)
                         )
-                        },
-                        resource.metadata
+                        }
                     )
                 }
             }
@@ -72,8 +69,7 @@ class ProductsRepositoryImpl(
                         resource.data?.toDomain()?.copy(
                             isFavorite = favoriteIds.contains(resource.data.id),
                             isInCart = cartIds.contains(resource.data.id)
-                        ),
-                        resource.metadata
+                        )
                     )
 
                 }
@@ -90,8 +86,7 @@ class ProductsRepositoryImpl(
                     Resource.Success(
                         results.data?.map {dto->
                             dto?.toDomain()
-                        },
-                        results.metadata
+                        }
                     )
                 }
                 is Resource.Error -> results

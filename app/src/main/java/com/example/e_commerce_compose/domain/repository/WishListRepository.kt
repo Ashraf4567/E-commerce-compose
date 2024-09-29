@@ -1,6 +1,6 @@
 package com.example.e_commerce_compose.domain.repository
 
-import com.example.e_commerce_compose.domain.model.AddToWishlistRequest
+import com.example.e_commerce_compose.data.model.AddToWishlistRequest
 import com.example.e_commerce_compose.domain.model.Product
 import com.example.e_commerce_compose.utils.Resource
 import kotlinx.coroutines.flow.Flow

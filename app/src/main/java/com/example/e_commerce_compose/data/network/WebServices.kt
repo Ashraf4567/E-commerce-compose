@@ -9,14 +9,15 @@ import com.example.e_commerce_compose.data.model.cart.CartResponse
 import com.example.e_commerce_compose.data.model.cart.UpdateQuantityRequest
 import com.example.e_commerce_compose.data.model.categories.CategoryDto
 import com.example.e_commerce_compose.data.model.categories.SubCategoryDto
-import com.example.e_commerce_compose.data.model.order.UserOrdersResponse
 import com.example.e_commerce_compose.data.model.products.BrandDto
 import com.example.e_commerce_compose.data.model.products.ProductDto
-import com.example.e_commerce_compose.domain.model.AddToCartRequest
+import com.example.e_commerce_compose.data.model.cart.AddToCartRequest
 import com.example.e_commerce_compose.domain.model.CartOperationResponse
-import com.example.e_commerce_compose.domain.model.AddToWishlistRequest
+import com.example.e_commerce_compose.data.model.AddToWishlistRequest
+import com.example.e_commerce_compose.data.model.order.UserOrdersResponseItem
 import com.example.e_commerce_compose.domain.model.SignInRequest
-import com.example.e_commerce_compose.domain.model.SignInResponse
+import com.example.e_commerce_compose.data.model.user.AuthResponse
+import com.example.e_commerce_compose.data.model.user.SignupRequest
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -49,7 +50,13 @@ interface WebServices {
     suspend fun signIn(
         @Body
         signInRequest: SignInRequest
-    ): SignInResponse
+    ): AuthResponse
+
+    @POST("api/v1/auth/signup")
+    suspend fun signUp(
+        @Body
+        signUpRequest: SignupRequest
+    ): AuthResponse
 
     @POST("api/v1/wishlist")
     suspend fun addProductToWishList(
@@ -103,5 +110,9 @@ interface WebServices {
     @GET("api/v1/orders/user/{id}")
     suspend fun getUserOrders(
         @Path("id") userId: String
-    ):UserOrdersResponse
+    ):List<UserOrdersResponseItem>
+
+    @DELETE("api/v1/addresses/{id}")
+    suspend fun deleteAddress(@Path("id") addressId: String): BaseResponse<List<AddressDto>?>
+
 }

@@ -21,7 +21,7 @@ fun RootNavGraph(
     ) {
         authNavGraph(navController = navController)
         //this should br composable of home screen which will contain another nav controller with different nav graph
-        composable(route = Graph.Home){
+        composable(route = Graph.HOME){
             Home()
         }
 

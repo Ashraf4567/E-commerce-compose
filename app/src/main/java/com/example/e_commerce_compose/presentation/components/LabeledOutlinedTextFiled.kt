@@ -31,7 +31,7 @@ fun LabeledOutlinedTextFiled(
     value: String,
     label: String,
     placeholder: String,
-    keyboardType: KeyboardType,
+    keyboardType: KeyboardType = KeyboardType.Text,
     icon: ImageVector? = null,
     isError: Boolean = false,
     errorMessage: String = "",

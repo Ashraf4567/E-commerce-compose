@@ -1,6 +1,6 @@
-package com.example.e_commerce_compose.domain.model
+package com.example.e_commerce_compose.data.model.user
 
-data class SignInResponse(
+data class AuthResponse(
 	val message: String? = null,
 	val user: User? = null,
 	val token: String? = null

@@ -3,7 +3,6 @@ package com.example.e_commerce_compose.presentation.screens.productDetails
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -47,7 +46,7 @@ fun ProductDetailsScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { ProductDetailsTopBar(
+        topBar = { MyTopBar(
             onBackClicked = onBackClick,
             scrollBehavior = scrollBehavior
         )}

@@ -18,8 +18,6 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridItemScope
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
@@ -49,7 +47,7 @@ import androidx.navigation.NavController
 import com.example.e_commerce_compose.presentation.components.HomeProductsItem
 import com.example.e_commerce_compose.presentation.components.ShimmerListItem
 import com.example.e_commerce_compose.presentation.navigation.Screens
-import com.example.e_commerce_compose.presentation.screens.productDetails.ProductDetailsTopBar
+import com.example.e_commerce_compose.presentation.screens.productDetails.MyTopBar
 import com.example.e_commerce_compose.ui.theme.poppins
 import org.koin.androidx.compose.koinViewModel
 
@@ -77,7 +75,7 @@ fun BrowseProductsScreen(
 
     Scaffold(
         topBar = {
-            ProductDetailsTopBar(
+            MyTopBar(
                 onBackClicked = navController::popBackStack,
                 title = state.screenTitle,
                 scrollBehavior = scrollBehavior,

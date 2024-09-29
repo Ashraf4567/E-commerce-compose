@@ -35,7 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.e_commerce_compose.presentation.screens.productDetails.ProductDetailsTopBar
+import com.example.e_commerce_compose.presentation.screens.productDetails.MyTopBar
 import com.example.e_commerce_compose.ui.theme.PrimaryBlue
 import com.example.e_commerce_compose.ui.theme.PrimaryText
 import com.example.e_commerce_compose.ui.theme.poppins
@@ -66,7 +66,7 @@ fun CartScreenContent(
     }
     Scaffold(
         topBar = {
-            ProductDetailsTopBar(
+            MyTopBar(
                 onBackClicked = { cartViewModel.onEvent(CartEvents.BackPressed) },
                 title = "Cart",
                 scrollBehavior = scrollBehavior,

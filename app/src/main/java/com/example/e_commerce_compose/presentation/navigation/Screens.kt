@@ -9,6 +9,7 @@ sealed class Screens(val route: String) {
         fun createRoute(productId: String) = "productDetails/$productId"
     }
     data object SignIn: Screens("signIn")
+    data object SignUp: Screens("signUp")
     data object Cart: Screens("cart")
     data object Checkout: Screens("checkout/{cartId}"){
         fun createRoute(cartId: String) = "checkout/$cartId"

@@ -21,6 +21,9 @@ import com.example.e_commerce_compose.presentation.screens.checkout.CheckoutView
 import com.example.e_commerce_compose.presentation.screens.home.HomeViewModel
 import com.example.e_commerce_compose.presentation.screens.login.SignInViewModel
 import com.example.e_commerce_compose.presentation.screens.productDetails.ProductDetailsViewModel
+import com.example.e_commerce_compose.presentation.screens.profile.ProfileViewModel
+import com.example.e_commerce_compose.presentation.screens.profile.update_info.UpdateInfoViewModel
+import com.example.e_commerce_compose.presentation.screens.signup.SignupViewmodel
 import com.example.e_commerce_compose.presentation.screens.wishlist.WishlistViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -40,6 +43,10 @@ val repositoriesModule = module {
     viewModel{SignInViewModel(get() , get())}
     viewModel { WishlistViewModel(get() , get()) }
     viewModel { CartViewModel(get()) }
+    viewModel { ProfileViewModel(get() , get() , get()) }
     viewModel { CheckoutViewModel(get() , get() , get() ) }
     viewModel { BrowseProductsViewModel(get() , get()) }
+    viewModel { SignupViewmodel(get() , get()) }
+    viewModel { UpdateInfoViewModel() }
+
 }

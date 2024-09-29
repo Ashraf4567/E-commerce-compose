@@ -1,5 +1,6 @@
 package com.example.e_commerce_compose.presentation.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,9 @@ import com.example.e_commerce_compose.presentation.screens.home.HomeScreenConten
 import com.example.e_commerce_compose.presentation.screens.productDetails.ProductDetailsScreen
 import com.example.e_commerce_compose.presentation.screens.productDetails.ProductDetailsViewModel
 import com.example.e_commerce_compose.presentation.screens.profile.ProfileScreen
+import com.example.e_commerce_compose.presentation.screens.profile.orders.Orders
+import com.example.e_commerce_compose.presentation.screens.profile.shopping_address.AddressesScreen
+import com.example.e_commerce_compose.presentation.screens.profile.update_info.UpdateInfoScreen
 import com.example.e_commerce_compose.presentation.screens.wishlist.Wishlist
 import com.example.e_commerce_compose.presentation.screens.wishlist.WishlistViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -30,10 +34,10 @@ fun HomeNavGraph(
 ){
     NavHost(
         navController = navController,
-        route = Graph.Home,
+        route = Graph.HOME,
         startDestination = Screens.Home.route,
         modifier = Modifier
-            .padding(paddingValues)
+            .padding(bottom =  paddingValues.calculateBottomPadding())
     ){
         composable(route = Screens.Home.route){
             HomeScreenContent(
@@ -64,6 +68,9 @@ fun HomeNavGraph(
                 },
                 navigateToMyOrders = {
                     navController.navigate(Screens.MyOrders.route)
+                },
+                navigateToAddresses = {
+                    navController.navigate(Screens.ShoppingAddress.route)
                 }
             )
         }
@@ -74,7 +81,19 @@ fun HomeNavGraph(
             arguments = listOf(navArgument("productId"){
                 type = NavType.StringType
                 nullable = true
-            })
+            }),
+            enterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = androidx.compose.animation.core.tween(400)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = androidx.compose.animation.core.tween(400)
+                )
+            }
         ){
             val productDetailsViewModel: ProductDetailsViewModel = koinViewModel()
             ProductDetailsScreen(
@@ -86,22 +105,42 @@ fun HomeNavGraph(
             )
 
         }
-        composable(route = Screens.BrowseProducts.route){
+        composable(
+            route = Screens.BrowseProducts.route,
+            enterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = androidx.compose.animation.core.tween(400)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = androidx.compose.animation.core.tween(400)
+                )
+            }
+        ){
             BrowseProductsScreen(
                 navController = navController
             )
         }
 
         composable(route = Screens.MyOrders.route){
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
-                verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
-            ) {
-                Text(text = "My Orders")
-            }
+            Orders()
         }
-        composable(route = Screens.ShoppingAddress.route){}
-        composable(route = Screens.EditProfile.route){}
+        composable(route = Screens.ShoppingAddress.route){
+            AddressesScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(route = Screens.EditProfile.route){
+            UpdateInfoScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
     }
 }

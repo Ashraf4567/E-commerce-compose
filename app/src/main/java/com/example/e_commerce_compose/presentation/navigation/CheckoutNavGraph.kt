@@ -82,7 +82,7 @@ fun NavGraphBuilder.checkoutNavGraph(navController: NavHostController){
                 totalPrice = totalPrice?.toDouble()?:0.0,
                 paymentMethod = paymentMethod,
                 onNavigateToHome = {
-                    navController.navigate(Graph.Home){
+                    navController.navigate(Graph.HOME){
                         popUpTo(Screens.SuccessPlaceOrder.route){
                             inclusive = true
                         }

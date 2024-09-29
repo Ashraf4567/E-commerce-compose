@@ -2,10 +2,7 @@ package com.example.e_commerce_compose.presentation.screens.login
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,14 +36,17 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.e_commerce_compose.presentation.components.LabeledOutlinedTextFiled
+import com.example.e_commerce_compose.presentation.navigation.Graph
+import com.example.e_commerce_compose.presentation.navigation.Screens
 import com.example.e_commerce_compose.ui.theme.PrimaryBlue
 
 @Composable
 fun SignInScreen(
     modifier: Modifier = Modifier,
     viewModel: SignInViewModel,
-    onNavigateToHome: () -> Unit
+    navController: NavHostController,
 ) {
 
     val isKeyboardOpen by keyboardAsState()
@@ -56,9 +56,24 @@ fun SignInScreen(
     LaunchedEffect(key1 = Unit) {
         viewModel.effect.collect {effect ->
             when (effect) {
-                is SignInEffects.NavigateToHome -> onNavigateToHome()
+                is SignInEffects.NavigateToHome -> {
+                    navController.navigate(Graph.HOME){
+                        popUpTo(Screens.SignIn.route){
+                            inclusive = true
+                        }
+                    }
+                }
                 is SignInEffects.ShowToastMessage -> {
                     Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+                }
+
+                SignInEffects.NavigateToForgotPassword -> {}
+                SignInEffects.NavigateToSignUp -> {
+                    navController.navigate(Screens.SignUp.route){
+                        popUpTo(Screens.SignIn.route){
+                            inclusive = true
+                        }
+                    }
                 }
             }
         }

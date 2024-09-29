@@ -1,6 +1,7 @@
 package com.example.e_commerce_compose.presentation.screens.profile
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusModifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,6 +38,7 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
     navigateToEditProfile: () -> Unit = {},
     navigateToMyOrders: () -> Unit = {},
+    navigateToAddresses: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -48,6 +51,7 @@ fun ProfileScreen(
     ) {paddingValues ->
         Column(
             modifier = Modifier
+                .background(Color.White)
                 .padding(paddingValues)
                 .fillMaxSize()
                 .padding(horizontal = 8.dp , vertical = 8.dp),
@@ -68,8 +72,8 @@ fun ProfileScreen(
                         onClick = {title->
                             when(title){
                                 "My Orders" -> navigateToMyOrders()
-                                "My Information" -> {}
-                                "Shipping Addresses" -> {}
+                                "My Information" -> navigateToEditProfile()
+                                "Shipping Addresses" -> navigateToAddresses()
                                 "Payment Methods" -> {}
                                 "Settings" -> {}
                                 "Logout" -> {}

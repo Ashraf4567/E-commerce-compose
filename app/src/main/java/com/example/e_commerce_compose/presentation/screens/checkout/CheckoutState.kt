@@ -10,5 +10,5 @@ data class CheckoutState(
     val userAddresses : List<Address> = emptyList(),
     val showAddressBottomSheet: Boolean = false,
     val selectedAddress: Address? = null,
-    val addNewAddressLoading: Boolean = false
+    val addNewAddressLoading: Boolean = false,
 )
