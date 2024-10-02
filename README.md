@@ -33,45 +33,11 @@ The project follows Clean Architecture principles and is organized into the foll
 - `domain`: Use cases and domain models
 - `presentation`: UI components and ViewModels
 
-## Setup and Installation
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/yourusername/ecommerce-android-app.git
-   ```
-2. Open the project in Android Studio.
-3. Sync the project with Gradle files.
-4. Run the app on an emulator or physical device.
+## Screenshots
 
-## Configuration
+![Mockup 4](https://github.com/user-attachments/assets/497c7ac9-1bf4-49dd-8ce1-3c0ac69cf15c)
+![Mockup 3](https://github.com/user-attachments/assets/1a62cc9d-c654-4823-87e5-a6e8b2b2becd)
+![Mockup 14](https://github.com/user-attachments/assets/12df5397-b0c7-48e3-8f67-92a2f813eb42)
+![Mockup 13](https://github.com/user-attachments/assets/cbeea8ce-8a94-48e8-88dc-6d8260b9e0e1)
 
-- Ensure you have the latest version of Android Studio.
-- Minimum SDK version: 21
-- Target SDK version: 33
-
-## Testing
-
-The project includes both unit tests and instrumentation tests:
-
-- Run unit tests: `./gradlew test`
-- Run instrumentation tests: `./gradlew connectedAndroidTest`
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
-
-## Acknowledgments
-
-- [Jetpack Compose](https://developer.android.com/jetpack/compose)
-- [Koin](https://insert-koin.io/)
-- [Coil](https://coil-kt.github.io/coil/)
-- [Room](https://developer.android.com/training/data-storage/room)
-- [Retrofit](https://square.github.io/retrofit/)
-
-## Contact
-
-For any queries or suggestions, please contact [Your Name](mailto:your.email@example.com).
