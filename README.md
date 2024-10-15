@@ -41,3 +41,9 @@ The project follows Clean Architecture principles and is organized into the foll
 ![Mockup 14](https://github.com/user-attachments/assets/12df5397-b0c7-48e3-8f67-92a2f813eb42)
 ![Mockup 13](https://github.com/user-attachments/assets/cbeea8ce-8a94-48e8-88dc-6d8260b9e0e1)
 
+## Video
+
+https://github.com/user-attachments/assets/3931b967-c500-40f2-93c8-6771cf5a9e36
+
+
+
