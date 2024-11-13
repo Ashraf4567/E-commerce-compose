@@ -16,7 +16,7 @@ This Android application is a feature-rich e-commerce platform built using moder
 
 ## Technical Stack
 
-- **Architecture**: Clean Architecture
+- **Architecture**: Clean Architecture(MVI)
 - **UI**: Jetpack Compose
 - **Dependency Injection**: Koin
 - **Image Loading**: Coil
